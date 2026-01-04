@@ -1,138 +1,148 @@
-<app-header-miski></app-header-miski>
-
-<ion-content class="ion-padding">
-  <h1 class="page-title">Inventario📦</h1>
-
-  <!-- Barra de búsqueda PRIMERO -->
- <div class="search-container">
-  <ion-searchbar 
-    [(ngModel)]="searchTerm" 
-    placeholder="Buscar productos..."
-    class="custom-searchbar"
-    (ionInput)="handleSearch($event)"
-    search-icon="search-outline"
-    clear-icon="close-circle">
-  </ion-searchbar>
-</div>
-
-  <!-- Segmentos de categorías DESPUÉS -->
-  <div >
-   <ion-card class="filter-card">
-  <ion-card-content>
-    <div class="filter-header">
-      <ion-segment [(ngModel)]="selectedCategory" (ionChange)="onCategoryChange()" mode="ios">
-        
-        <ion-segment-button value="limpieza">
-          <ion-label>Limpieza</ion-label>
-        </ion-segment-button>
-
-        <ion-segment-button value="absorbentes">
-          <ion-label>Absorbentes</ion-label>
-        </ion-segment-button>
-
-        <ion-segment-button value="dispensadores">
-          <ion-label>Dispensadores</ion-label>
-        </ion-segment-button>
-
-      </ion-segment>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="miski-toolbar">
+    
+    <div slot="start" class="header-left-icon">
+      <img src="assets/icon/Leading_icon.svg" 
+           alt="Inicio" 
+           (click)="irAlInicio()">
     </div>
-  </ion-card-content>
-</ion-card>
-  </div>
 
-  <!-- Tarjetas destacadas -->
-  <div class="featured-grid">
-    <ion-card class="featured-card large">
-      <div class="card-content">
-        <ion-icon name="cube-outline" class="featured-icon"></ion-icon>
-        <h3>Total productos</h3>
-        <p>{{ filteredProducts.length }} producto<span *ngIf="filteredProducts.length !== 1">s</span></p>
-      </div>
-    </ion-card>
-  </div>
+    <ion-title class="header-logo-center">
+      <img src="assets/icon/holaa-Photoroom.png" alt="Logo MISKY">
+    </ion-title>
 
-  <!-- Lista de productos -->
-  <ion-list lines="none" class="products-list">
-    <ion-item-sliding *ngFor="let producto of paginatedProducts">
-      <ion-item class="product-item" button detail="false" (click)="verDetalleProducto(producto)">
-        <div class="product-image-wrapper" slot="start">
-          <img [src]="producto.image || 'assets/icon/Legia.svg'" [alt]="producto.name">
+    <ion-buttons slot="end">
+      <div class="header-avatar-right" (click)="irAlPerfil()">
+        <div class="avatar-circle">
+          <img [src]="avatarUrl" alt="Perfil">
         </div>
-        
-        <ion-label class="product-info">
-          <h2 class="product-name">{{ producto.name }}</h2>
-          <p class="product-code">Código: {{ producto.code }}</p>
-          <p class="product-description">{{ producto.description || 'Sin descripción' }}</p>
-          <div class="product-meta">
-            <ion-badge [color]="(producto.stock || 0) > 10 ? 'success' : (producto.stock || 0) > 0 ? 'warning' : 'danger'" class="stock-badge">
-              Stock: {{ producto.stock || 0 }}
-            </ion-badge>
+      </div>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="bg-light">
+  
+  <div class="header-section ion-padding-horizontal ion-padding-top">
+    <div class="title-container">
+      <h1 class="page-title">Inventario <span class="emoji">📦</span></h1>
+      <ion-badge color="primary" mode="ios">{{ filteredProducts.length }} ítems</ion-badge>
+    </div>
+
+    <div class="search-wrapper">
+      <ion-searchbar 
+        [(ngModel)]="searchTerm" 
+        placeholder="Buscar por nombre o código..."
+        mode="ios"
+        class="custom-searchbar"
+        (ionInput)="handleSearch($event)"
+        search-icon="search-outline"
+        clear-icon="close-circle">
+      </ion-searchbar>
+    </div>
+  </div>
+
+  <div class="categories-container ion-padding-horizontal">
+    <ion-segment 
+      [(ngModel)]="selectedCategory" 
+      (ionChange)="onCategoryChange()" 
+      scrollable="true" 
+      mode="md"
+      class="custom-segment">
+      
+      <ion-segment-button value="limpieza">
+        <div class="segment-content">
+          <ion-icon name="sparkles-outline"></ion-icon>
+          <ion-label>Limpieza</ion-label>
+        </div>
+      </ion-segment-button>
+
+      <ion-segment-button value="absorbentes">
+        <div class="segment-content">
+          <ion-icon name="water-outline"></ion-icon>
+          <ion-label>Absorbentes</ion-label>
+        </div>
+      </ion-segment-button>
+
+      <ion-segment-button value="dispensadores">
+        <div class="segment-content">
+          <ion-icon name="albums-outline"></ion-icon>
+          <ion-label>Dispensadores</ion-label>
+        </div>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div class="products-grid ion-padding">
+    
+    <ng-container *ngFor="let producto of paginatedProducts">
+      <ion-card class="product-card animate__animated animate__fadeIn" (click)="verDetalleProducto(producto)">
+        <ion-item lines="none" class="product-header">
+          <ion-thumbnail slot="start" class="product-thumb">
+            <img [src]="producto.image || 'assets/icon/Legia.svg'" [alt]="producto.name"
+                 onerror="this.src='assets/icon/Legia.svg'">
+          </ion-thumbnail>
+          <ion-label>
+            <div class="header-top">
+              <span class="product-code">{{ producto.code }}</span>
+              <ion-badge [color]="(producto.stock || 0) > 10 ? 'success' : (producto.stock || 0) > 0 ? 'warning' : 'danger'" class="stock-badge">
+                {{ producto.stock || 0 }} u.
+              </ion-badge>
+            </div>
+            <h2 class="product-name">{{ producto.name }}</h2>
+          </ion-label>
+          
+          <ion-button fill="clear" color="medium" slot="end">
+            <ion-icon name="information-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+
+        <div class="card-footer">
+          <p class="description-text">{{ producto.description || 'Sin descripción disponible.' }}</p>
+          
+          <div class="action-buttons">
+            <ion-button fill="clear" size="small" color="primary" (click)="editarProducto(producto, $event)">
+              <ion-icon slot="start" name="create-outline"></ion-icon>
+              Editar
+            </ion-button>
+            <ion-button fill="clear" size="small" color="danger" (click)="eliminarProducto(producto, $event)">
+              <ion-icon slot="start" name="trash-outline"></ion-icon>
+              Eliminar
+            </ion-button>
           </div>
-        </ion-label>
-        
-        <ion-button fill="clear" slot="end" class="options-btn">
-          <ion-icon name="ellipsis-vertical" color="medium"></ion-icon>
-        </ion-button>
-      </ion-item>
-      
-      <!-- Opciones al deslizar -->
-      <ion-item-options side="end">
-        <ion-item-option color="primary" (click)="editarProducto(producto)">
-          <ion-icon slot="start" name="create-outline"></ion-icon>
-          Editar
-        </ion-item-option>
-        <ion-item-option color="danger" (click)="eliminarProducto(producto)">
-          <ion-icon slot="start" name="trash-outline"></ion-icon>
-          Eliminar
-        </ion-item-option>
-      </ion-item-options>
+        </div>
+      </ion-card>
+    </ng-container>
 
-      
-    </ion-item-sliding>
+    <div *ngIf="paginatedProducts.length === 0" class="empty-state">
+      <div class="empty-icon-wrapper">
+        <ion-icon name="search-outline"></ion-icon>
+      </div>
+      <h3>No se encontraron productos</h3>
+      <p>Intenta con otra búsqueda o categoría.</p>
+    </div>
+  </div>
 
-    <!-- Mensaje cuando no hay productos -->
-    <ion-item *ngIf="paginatedProducts.length === 0" lines="none" class="empty-state">
-      <ion-label class="ion-text-center">
-        <ion-icon name="cube-outline" style="font-size: 64px; color: #ccc;"></ion-icon>
-        <h2>No hay productos</h2>
-        <p>Agrega productos para comenzar</p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
-
-  <!-- Paginación -->
   <div class="pagination-container" *ngIf="totalPages > 1">
-    <ion-button 
-      fill="clear" 
-      [disabled]="currentPage === 1"
-      (click)="previousPage()">
+    <ion-button fill="clear" [disabled]="currentPage === 1" (click)="previousPage()">
       <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
     </ion-button>
     
-    <div class="page-numbers">
-      <ion-button 
-        *ngFor="let page of visiblePages" 
-        [fill]="page === currentPage ? 'solid' : 'clear'"
-        [color]="page === currentPage ? 'primary' : 'medium'"
-        size="small"
-        [disabled]="page === '...'"
-        (click)="goToPage(page)">
-        {{ page }}
-      </ion-button>
-    </div>
+    <span class="page-indicator">{{ currentPage }} / {{ totalPages }}</span>
     
-    <ion-button 
-      fill="clear" 
-      [disabled]="currentPage === totalPages"
-      (click)="nextPage()">
+    <ion-button fill="clear" [disabled]="currentPage === totalPages" (click)="nextPage()">
       <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
     </ion-button>
   </div>
 
-  <!-- Botón flotante para agregar -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button class="fab-button-agregar" (click)="agregarProducto()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+  <div class="bottom-spacer"></div>
+
+  <div class="fab-container">
+    <ion-button class="btn-nuevo-producto" shape="round" (click)="agregarProducto()">
+      <ion-icon slot="start" name="add"></ion-icon>
+      Nuevo Producto
+    </ion-button>
+  </div>
+
 </ion-content>

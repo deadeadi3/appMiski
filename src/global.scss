@@ -145,3 +145,74 @@ ion-content::before {
     --background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
   }
 }
+/* =========================================
+   ESTILOS GLOBALES DEL HEADER MISKI
+   ========================================= */
+
+.miski-toolbar {
+  --background: #325298; /* Azul Corporativo */
+  --color: white;
+  padding-left: 4px;
+  padding-right: 4px;
+  /* Opcional: Aumentar un poco la altura del toolbar si los iconos son de 48px */
+  --min-height: 60px; 
+}
+
+/* --- IZQUIERDA: Icono Casa/Atrás --- */
+.header-left-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  
+  img {
+    height: 48px; /* Aumentado a tu gusto */
+    width: auto;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  img:active {
+    transform: scale(0.9);
+  }
+}
+
+/* --- CENTRO: Logo --- */
+.header-logo-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  
+  img {
+    height: 48px; /* Aumentado a tu gusto */
+    width: auto;
+    object-fit: contain;
+    margin-left: 7.8vh; /* Tu margen específico */
+  }
+}
+
+/* --- DERECHA: Avatar --- */
+.header-avatar-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 50px; /* Ajustado un poco para dar espacio */
+  
+  .avatar-circle {
+    width: 40px; /* Un poco más grande para acompañar */
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+

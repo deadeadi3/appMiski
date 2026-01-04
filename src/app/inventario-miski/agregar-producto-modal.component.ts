@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { IonicModule, ModalController, LoadingController, ToastController } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -12,11 +12,14 @@ import { ProductosService, Producto } from './productos.services';
   imports: [IonicModule, FormsModule, CommonModule, ReactiveFormsModule]
 })
 export class AgregarProductoModalComponent implements OnInit {
+  @Input() productoEditar: Producto | undefined; // Recibe el producto si estamos editando
+
   formulario!: FormGroup;
   imagenPrevia: string = 'assets/icon/Legia.svg';
   cargando = false;
   categorias = ['limpieza', 'absorbentes', 'dispensadores'];
-  
+  esEdicion = false;
+
   constructor(
     private modalController: ModalController,
     private formBuilder: FormBuilder,
@@ -26,33 +29,49 @@ export class AgregarProductoModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.esEdicion = !!this.productoEditar;
     this.inicializarFormulario();
+    
+    // Si estamos editando, rellenamos el formulario con los datos existentes
+    if (this.esEdicion && this.productoEditar) {
+      this.cargarDatosEdicion();
+    }
   }
 
   inicializarFormulario() {
     this.formulario = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      code: ['', [Validators.required, Validators.minLength(2)]],
+      code: ['', [Validators.required]],
       category: ['limpieza', Validators.required],
       telefono_de_contacto: ['', [Validators.pattern(/^[0-9\-\+\(\)\s]*$/)]],
-      image: ['assets/icon/Legia.svg'],
+      image: [''],
       stock: [0, [Validators.required, Validators.min(0)]],
       description: ['']
     });
   }
 
+  cargarDatosEdicion() {
+    if (!this.productoEditar) return;
+
+    this.formulario.patchValue({
+      name: this.productoEditar.name,
+      code: this.productoEditar.code,
+      category: this.productoEditar.category,
+      telefono_de_contacto: this.productoEditar.telefono_de_contacto,
+      image: this.productoEditar.image,
+      stock: this.productoEditar.stock,
+      description: this.productoEditar.description
+    });
+
+    if (this.productoEditar.image) {
+      this.imagenPrevia = this.productoEditar.image;
+    }
+  }
+
   actualizarImagenPrevia(event: any) {
     const url = event.target.value;
     if (url) {
-      const img = new Image();
-      img.onload = () => {
-        this.imagenPrevia = url;
-      };
-      img.onerror = () => {
-        this.imagenPrevia = 'assets/icon/Legia.svg';
-        this.mostrarToast('URL de imagen inválida', 'warning');
-      };
-      img.src = url;
+      this.imagenPrevia = url;
     } else {
       this.imagenPrevia = 'assets/icon/Legia.svg';
     }
@@ -60,43 +79,68 @@ export class AgregarProductoModalComponent implements OnInit {
 
   async guardarProducto() {
     if (!this.formulario.valid) {
-      this.mostrarToast('Completa todos los campos requeridos correctamente', 'warning');
+      this.mostrarToast('Por favor, revisa los campos obligatorios', 'warning');
+      this.formulario.markAllAsTouched();
       return;
     }
 
     const loading = await this.loadingController.create({
-      message: '⏳ Agregando producto...',
+      message: this.esEdicion ? 'Actualizando...' : 'Guardando...',
       spinner: 'crescent'
     });
     await loading.present();
 
     try {
-      const nuevoProducto: Producto = {
-        name: this.formulario.get('name')?.value.trim(),
-        code: this.formulario.get('code')?.value.trim().toUpperCase(),
-        category: this.formulario.get('category')?.value,
-        telefono_de_contacto: this.formulario.get('telefono_de_contacto')?.value || '',
-        image: this.formulario.get('image')?.value || 'assets/icon/Legia.svg',
-        stock: parseInt(this.formulario.get('stock')?.value) || 0,
-        description: this.formulario.get('description')?.value || '',
-        specific_features: {}
+      const datosFormulario = this.formulario.value;
+
+      const productoData: Producto = {
+        name: datosFormulario.name.trim(),
+        code: datosFormulario.code.trim().toUpperCase(),
+        category: datosFormulario.category,
+        telefono_de_contacto: datosFormulario.telefono_de_contacto || '',
+        image: datosFormulario.image || 'assets/icon/Legia.svg',
+        stock: parseInt(datosFormulario.stock) || 0,
+        description: datosFormulario.description || '',
+        specific_features: this.esEdicion && this.productoEditar ? this.productoEditar.specific_features : {}
       };
 
-      this.productosService.agregarProducto(nuevoProducto).subscribe({
-        next: (id) => {
-          loading.dismiss();
-          this.mostrarToast('✅ Producto agregado exitosamente', 'success');
-          this.cerrarModal(true);
-        },
-        error: (error) => {
-          loading.dismiss();
-          console.error('Error al agregar producto:', error);
-          this.mostrarToast('❌ Error al agregar producto', 'danger');
-        }
-      });
+      if (this.esEdicion && this.productoEditar?.id) {
+        // --- MODO EDITAR ---
+        // Mantenemos el ID original
+        productoData.id = this.productoEditar.id;
+        
+        this.productosService.actualizarProducto(this.productoEditar.id, productoData).subscribe({
+          next: () => {
+            loading.dismiss();
+            this.mostrarToast('✅ Producto actualizado correctamente', 'success');
+            this.cerrarModal(true);
+          },
+          error: (error) => {
+            loading.dismiss();
+            console.error('Error al actualizar:', error);
+            this.mostrarToast('❌ Error al actualizar', 'danger');
+          }
+        });
+
+      } else {
+        // --- MODO AGREGAR ---
+        this.productosService.agregarProducto(productoData).subscribe({
+          next: () => {
+            loading.dismiss();
+            this.mostrarToast('✅ Producto agregado correctamente', 'success');
+            this.cerrarModal(true);
+          },
+          error: (error) => {
+            loading.dismiss();
+            console.error('Error al agregar:', error);
+            this.mostrarToast('❌ Error al agregar', 'danger');
+          }
+        });
+      }
+
     } catch (error) {
       loading.dismiss();
-      this.mostrarToast('❌ Error inesperado', 'danger');
+      this.mostrarToast('Error inesperado', 'danger');
     }
   }
 
@@ -114,34 +158,8 @@ export class AgregarProductoModalComponent implements OnInit {
     await toast.present();
   }
 
-  obtenerErrorCampo(campo: string): string {
-    const control = this.formulario.get(campo);
-    if (control?.hasError('required')) {
-      return `${this.capitalizarCampo(campo)} es obligatorio`;
-    }
-    if (control?.hasError('minlength')) {
-      const minLength = control.getError('minlength').requiredLength;
-      return `${this.capitalizarCampo(campo)} debe tener al menos ${minLength} caracteres`;
-    }
-    if (control?.hasError('pattern')) {
-      return `${this.capitalizarCampo(campo)} contiene caracteres inválidos`;
-    }
-    if (control?.hasError('min')) {
-      return `${this.capitalizarCampo(campo)} no puede ser negativo`;
-    }
-    return '';
-  }
-
-  capitalizarCampo(campo: string): string {
-    return campo.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  }
-
   esCampoInvalido(campo: string): boolean {
     const control = this.formulario.get(campo);
     return !!(control && control.invalid && (control.dirty || control.touched));
-  }
-
-  compareFn(c1: any, c2: any): boolean {
-    return c1 === c2;
   }
 }

@@ -1,23 +1,37 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core'; // <--- Agregar inject
 import { IonicModule, ModalController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AlertController, ToastController, LoadingController } from '@ionic/angular';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router'; // <--- Agregar Router
 import { addIcons } from 'ionicons';
-import { add, cubeOutline, ellipsisVertical, createOutline, trashOutline, chevronBack, chevronForward, searchOutline } from 'ionicons/icons';
+import { 
+  add, cubeOutline, ellipsisVertical, createOutline, 
+  trashOutline, chevronBack, chevronForward, searchOutline,
+  sparklesOutline, waterOutline, albumsOutline, informationCircleOutline,
+  saveOutline, addCircleOutline, close, imageOutline, pricetagOutline,
+  barcodeOutline, gridOutline, callOutline, documentTextOutline 
+} from 'ionicons/icons';
 import { ProductosService, Producto } from 'src/app/inventario-miski/productos.services';
 import { AgregarProductoModalComponent } from './agregar-producto-modal.component';
-import { HeaderMiskiComponent } from '../header-miski/header-miski.component';
+// import { HeaderMiskiComponent } from '../header-miski/header-miski.component'; // <--- Ya no lo necesitamos
+import { UserProfileService } from '../services/user-profile.service'; // <--- IMPORTANTE
 
 @Component({
   selector: 'app-inventario-miski',
   templateUrl: './inventario-miski.page.html',
   styleUrls: ['./inventario-miski.page.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, CommonModule, RouterLink, AgregarProductoModalComponent, HeaderMiskiComponent],
+  imports: [IonicModule, FormsModule, CommonModule, RouterLink, AgregarProductoModalComponent], // <--- Quitamos HeaderMiskiComponent
 })
 export class InventarioMiskiPage implements OnInit {
+  
+  // --- VARIABLES PARA EL HEADER ---
+  private router = inject(Router);
+  private userProfileService = inject(UserProfileService); // <--- INYECTAR
+  avatarUrl: string = 'assets/icon/login.png';
+  // --------------------------------
+
   selectedCategory = 'limpieza';
   searchTerm = '';
   currentPage = 1;
@@ -36,17 +50,43 @@ export class InventarioMiskiPage implements OnInit {
     private productosService: ProductosService,
     private modalController: ModalController
   ) {
-    addIcons({ add, cubeOutline, ellipsisVertical, createOutline, trashOutline, chevronBack, chevronForward, searchOutline });
+    addIcons({ 
+      add, cubeOutline, ellipsisVertical, createOutline, 
+      trashOutline, chevronBack, chevronForward, searchOutline,
+      sparklesOutline, waterOutline, albumsOutline, informationCircleOutline,
+      saveOutline, addCircleOutline, close, imageOutline, pricetagOutline,
+      barcodeOutline, gridOutline, callOutline, documentTextOutline
+    });
   }
 
   ngOnInit() {
     this.cargarProductos();
+
+    // SUSCRIPCIÓN PARA AVATAR
+    this.userProfileService.userProfile$.subscribe(profile => {
+      if (profile && profile.photoURL) {
+        this.avatarUrl = profile.photoURL;
+      }
+    });
   }
+
+ 
+
+  // --- FUNCIONES DEL HEADER ---
+  irAlPerfil() {
+    this.router.navigate(['/perfil-miski']);
+  }
+
+  irAlInicio() {
+    this.router.navigate(['/button']);
+  }
+  // -----------------------------
 
   async cargarProductos() {
     const loading = await this.loadingController.create({
-      message: 'Cargando productos...',
-      spinner: 'crescent'
+      message: 'Cargando...',
+      spinner: 'crescent',
+      duration: 5000 
     });
     await loading.present();
 
@@ -57,9 +97,9 @@ export class InventarioMiskiPage implements OnInit {
         loading.dismiss();
       },
       error: (error) => {
-        console.error('Error al cargar productos:', error);
+        console.error('Error:', error);
         loading.dismiss();
-        this.mostrarToast('Error al cargar productos', 'danger');
+        this.mostrarToast('Error de conexión', 'danger');
       }
     });
   }
@@ -91,21 +131,13 @@ export class InventarioMiskiPage implements OnInit {
 
   updateVisiblePages() {
     const pages: (number | string)[] = [];
-    
     if (this.totalPages <= 7) {
-      for (let i = 1; i <= this.totalPages; i++) {
-        pages.push(i);
-      }
+      for (let i = 1; i <= this.totalPages; i++) { pages.push(i); }
     } else {
-      if (this.currentPage <= 3) {
-        pages.push(1, 2, 3, 4, '...', this.totalPages);
-      } else if (this.currentPage >= this.totalPages - 2) {
-        pages.push(1, '...', this.totalPages - 3, this.totalPages - 2, this.totalPages - 1, this.totalPages);
-      } else {
-        pages.push(1, '...', this.currentPage - 1, this.currentPage, this.currentPage + 1, '...', this.totalPages);
-      }
+      if (this.currentPage <= 3) { pages.push(1, 2, 3, 4, '...', this.totalPages); } 
+      else if (this.currentPage >= this.totalPages - 2) { pages.push(1, '...', this.totalPages - 3, this.totalPages - 2, this.totalPages - 1, this.totalPages); } 
+      else { pages.push(1, '...', this.currentPage - 1, this.currentPage, this.currentPage + 1, '...', this.totalPages); }
     }
-    
     this.visiblePages = pages;
   }
 
@@ -134,203 +166,67 @@ export class InventarioMiskiPage implements OnInit {
   }
 
   async verDetalleProducto(producto: Producto) {
-  const alert = await this.alertController.create({
-    header: producto.name,
-    subHeader: `Código: ${producto.code}`,
-    message: `
-      Categoría: ${producto.category}
-      
-      Stock: ${producto.stock || 0} unidades
-      
-      Descripción:
-      ${producto.description || 'Sin descripción'}
-      
-      Teléfono: ${producto.telefono_de_contacto || 'No especificado'}
-    `,
-    cssClass: 'producto-detalle-alert',
-    buttons: ['Cerrar']
-  });
-  await alert.present();
-}
+    const alert = await this.alertController.create({
+      header: producto.name,
+      subHeader: `Código: ${producto.code}`,
+      message: `Categoría: ${producto.category}\nStock: ${producto.stock} u.\n\n${producto.description || ''}`,
+      buttons: ['Cerrar']
+    });
+    await alert.present();
+  }
 
   async agregarProducto() {
     const modal = await this.modalController.create({
       component: AgregarProductoModalComponent,
-      cssClass: 'agregar-producto-modal',
-      breakpoints: [0.25, 0.5, 0.95],
-      initialBreakpoint: 0.95,
-      handle: true
+      mode: 'ios' 
     });
     await modal.present();
 
     const { data } = await modal.onWillDismiss();
-    
-    // Si se agregó un producto (data === true), recargar la lista
-    if (data) {
-      this.cargarProductos();
-    }
+    if (data) this.cargarProductos();
   }
 
-  async editarProducto(producto: Producto) {
-    const alert = await this.alertController.create({
-      header: 'Editar Producto',
-      inputs: [
-        {
-          name: 'code',
-          type: 'text',
-          placeholder: 'Código',
-          value: producto.code
-        },
-        {
-          name: 'name',
-          type: 'text',
-          placeholder: 'Nombre',
-          value: producto.name
-        },
-        {
-          name: 'category',
-          type: 'text',
-          placeholder: 'Categoría',
-          value: producto.category
-        },
-        {
-          name: 'telefono_de_contacto',
-          type: 'tel',
-          placeholder: 'Teléfono',
-          value: producto.telefono_de_contacto
-        },
-        {
-          name: 'description',
-          type: 'textarea',
-          placeholder: 'Descripción',
-          value: producto.description
-        },
-        {
-          name: 'stock',
-          type: 'number',
-          placeholder: 'Stock',
-          value: producto.stock?.toString()
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'Guardar',
-          handler: async (data) => {
-            if (!data.code || !data.name) {
-              this.mostrarToast('Código y nombre son obligatorios', 'warning');
-              return false;
-            }
-
-            const loading = await this.loadingController.create({
-              message: 'Actualizando producto...'
-            });
-            await loading.present();
-
-            const productoActualizado: Partial<Producto> = {
-              code: data.code,
-              name: data.name,
-              category: data.category,
-              telefono_de_contacto: data.telefono_de_contacto,
-              description: data.description,
-              stock: parseInt(data.stock) || 0
-            };
-
-            this.productosService.actualizarProducto(producto.id!, productoActualizado).subscribe({
-              next: () => {
-                loading.dismiss();
-                this.mostrarToast('✏️ Producto actualizado', 'primary');
-                this.cargarProductos();
-              },
-              error: (error) => {
-                loading.dismiss();
-                console.error('Error al actualizar:', error);
-                this.mostrarToast('Error al actualizar producto', 'danger');
-              }
-            });
-
-            return true;
-          }
-        }
-      ]
+  async editarProducto(producto: Producto, event: Event) {
+    event.stopPropagation();
+    const modal = await this.modalController.create({
+      component: AgregarProductoModalComponent,
+      componentProps: { productoEditar: producto },
+      mode: 'ios'
     });
-    await alert.present();
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data) this.cargarProductos();
   }
 
-  async eliminarProducto(producto: Producto) {
+  async eliminarProducto(producto: Producto, event: Event) {
+    event.stopPropagation();
     const alert = await this.alertController.create({
-      header: '¿Eliminar producto?',
-      message: `¿Estás seguro de eliminar "${producto.name}"? Esta acción no se puede deshacer.`,
+      header: '¿Eliminar?',
+      message: `Se eliminará "${producto.name}".`,
       buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
+        { text: 'Cancelar', role: 'cancel' },
         {
           text: 'Eliminar',
           cssClass: 'danger',
           handler: async () => {
-            const loading = await this.loadingController.create({
-              message: 'Eliminando producto...'
-            });
+            const loading = await this.loadingController.create({ message: 'Borrando...' });
             await loading.present();
-
             this.productosService.eliminarProducto(producto.id!, producto).subscribe({
               next: () => {
                 loading.dismiss();
-                this.mostrarToast(`🗑️ ${producto.name} eliminado`, 'danger');
+                this.mostrarToast('Producto eliminado', 'success');
                 this.cargarProductos();
               },
-              error: (error) => {
+              error: () => {
                 loading.dismiss();
-                console.error('Error al eliminar:', error);
-                this.mostrarToast('Error al eliminar producto', 'danger');
+                this.mostrarToast('Error al eliminar', 'danger');
               }
             });
           }
         }
       ]
     });
-    await alert.present();
-
-  }
-
-  async vaciarInventario() {
-    const alert = await this.alertController.create({
-      header: '⚠️ PELIGRO: Borrar Todo',
-      message: 'Estás a punto de eliminar TODOS los productos del inventario. Esta acción no se puede deshacer. ¿Continuar?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'SÍ, BORRAR TODO',
-          cssClass: 'danger-button', // Para que se vea rojo si tienes el estilo
-          handler: async () => {
-            const loading = await this.loadingController.create({
-              message: 'Vaciando inventario...'
-            });
-            await loading.present();
-
-            try {
-              await this.productosService.borrarTodoElInventario();
-              this.cargarProductos(); // Recargamos la lista (quedará vacía)
-              this.mostrarToast('🗑️ Inventario vaciado correctamente', 'warning');
-            } catch (error) {
-              console.error(error);
-              this.mostrarToast('Error al vaciar inventario', 'danger');
-            } finally {
-              loading.dismiss();
-            }
-          }
-        }
-      ]
-    });
-
     await alert.present();
   }
 

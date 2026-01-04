@@ -1,79 +1,80 @@
-<app-header-miski></app-header-miski>
-
-<ion-content class="ion-padding">
-  <h1 class="page-title">Perfil</h1>  <div class="profile-section" (click)="verPerfil()">
-    <div class="avatar-container">
-      <ion-avatar class="profile-avatar">
-        <img [src]="currentImage" (error)="handleImgError($event)" alt="Foto de perfil">
-      </ion-avatar>
-      <div class="avatar-edit-badge">
-        <ion-icon name="camera"></ion-icon>
-      </div>
-    </div>
-
-    <div class="profile-info">
-      <h2 class="profile-name">{{ userData.nombre }} {{ userData.apellidos }}</h2>
-      <p class="profile-usuario">Usuario: {{ userData.usuario }}</p>
-      <div class="profile-status">
-        <div class="status-dot"></div>
-        <span>{{ userData.activo ? 'Activo' : 'Inactivo' }}</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="stats-container">
-    <div class="stat-card">
-      <ion-icon name="calendar-outline"></ion-icon>
-      <div class="stat-info">
-        <span class="stat-value">{{ diasActivos }}</span>
-        <span class="stat-label">Días activo</span>
-      </div>
-    </div>
-    <div class="stat-card">
-      <ion-icon name="notifications-outline"></ion-icon>
-      <div class="stat-info">
-        <span class="stat-value">3</span>
-        <span class="stat-label">Notificaciones</span>
-      </div>
-    </div>
-  </div>
-
-  <ion-list lines="none" class="options-list">
+<ion-header class="ion-no-border">
+  <ion-toolbar class="miski-toolbar">
     
-    <ion-item button detail="false" class="option-item" (click)="editarDatos()">
-      <div class="option-icon-wrapper blue-bg">
-        <ion-icon name="person-outline" class="option-icon"></ion-icon>
-      </div>
-      <ion-label class="option-label">Editar datos personales</ion-label>
-      <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
-    </ion-item>
+    <div slot="start" class="header-left-icon">
+      <img src="assets/icon/Leading_icon.svg" 
+           alt="Inicio" 
+           (click)="irAlInicio()">
+    </div>
 
-    <ion-item button detail="false" class="option-item" (click)="cambiarPassword()">
-      <div class="option-icon-wrapper purple-bg">
-        <ion-icon name="lock-closed-outline" class="option-icon"></ion-icon>
-      </div>
-      <ion-label class="option-label">Cambiar contraseña</ion-label>
-      <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
-    </ion-item>
+    <ion-title class="header-logo-center">
+      <img src="assets/icon/holaa-Photoroom.png" alt="Logo MISKY">
+    </ion-title>
 
-    <ion-item button detail="false" class="option-item">
-      <div class="option-icon-wrapper orange-bg">
-        <ion-icon name="notifications-outline" class="option-icon"></ion-icon>
+    <ion-buttons slot="end">
+      <div class="header-avatar-right" (click)="irAlPerfil()">
+        <div class="avatar-circle">
+          <img [src]="avatarUrl" alt="Perfil">
+        </div>
       </div>
-      <ion-label class="option-label">Notificaciones</ion-label>
-      <ion-toggle [(ngModel)]="notifEnabled" slot="end" class="notif-toggle" (ionChange)="configurarNotificaciones()"></ion-toggle>
-    </ion-item>
+    </ion-buttons>
 
-    <ion-item button detail="false" class="option-item logout-item" (click)="logout()">
-      <div class="option-icon-wrapper logout-icon-wrapper">
-        <ion-icon name="log-out-outline" class="option-icon"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="bg-light ion-padding">
+  
+  <div class="profile-header-card">
+    <div class="profile-avatar-large">
+      <img [src]="userProfile?.photoURL || avatarUrl" alt="Foto de perfil">
+      <div class="edit-avatar-btn" (click)="abrirEditarDatos()">
+        <ion-icon name="camera-outline"></ion-icon>
       </div>
-      <ion-label class="option-label logout-label">Cerrar Sesión</ion-label>
-      <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
-    </ion-item>
-  </ion-list>
-
-  <div class="app-version">
-    <p>Versión Grupo 8</p>
+    </div>
+  
+    <h2 class="profile-name">{{ userProfile?.nombre }} {{ userProfile?.apellidos }}</h2>
+    <p class="profile-email">{{ userProfile?.email || 'cargando...' }}</p>
+    
+   <ion-chip [color]="userProfile?.activo ? 'success' : 'danger'" mode="ios" class="status-chip">
+      <ion-icon [name]="userProfile?.activo ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+      <ion-label>{{ userProfile?.activo ? 'Activo' : 'Inactivo' }}</ion-label>
+    </ion-chip>
   </div>
+
+  <div class="profile-options-grid">
+    
+    <ion-card class="option-card" button (click)="abrirEditarDatos()">
+      <div class="icon-box blue">
+        <ion-icon name="create-outline"></ion-icon>
+      </div>
+      <div class="text-box">
+        <h3>Editar Datos</h3>
+        <p>Actualizar nombre o foto</p>
+      </div>
+      <ion-icon name="chevron-forward-outline" slot="end" color="medium"></ion-icon>
+    </ion-card>
+
+    <ion-card class="option-card" button (click)="abrirCambiarPassword()">
+      <div class="icon-box orange">
+        <ion-icon name="lock-closed-outline"></ion-icon>
+      </div>
+      <div class="text-box">
+        <h3>Seguridad</h3>
+        <p>Cambiar contraseña</p>
+      </div>
+      <ion-icon name="chevron-forward-outline" slot="end" color="medium"></ion-icon>
+    </ion-card>
+
+    <ion-card class="option-card logout-card" button (click)="logout()">
+      <div class="icon-box red">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </div>
+      <div class="text-box">
+        <h3>Cerrar Sesión</h3>
+        <p>Salir de la aplicación</p>
+      </div>
+    </ion-card>
+
+  </div>
+
 </ion-content>

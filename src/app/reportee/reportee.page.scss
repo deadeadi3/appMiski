@@ -1,740 +1,677 @@
-/* ========== VARIABLES DE COLORES AZULES ========== */
-$azul-marino: #1e3a5f;              // Azul marino para textos
-$azul-electrico: #0066ff;           // Azul eléctrico para acentos
-$azul-grisaceo: #e8f0f8;           // Azul grisáceo suave para fondo
-$azul-medio: #4a90e2;               // Azul medio
-$azul-claro: #b3d9ff;               // Azul claro
-
-/* ========== VARIABLES DE DISEÑO SOFT UI ========== */
-$border-radius: 20px;               // Bordes redondeados de 20px
-$border-width: 1px;                  // Borde sólido fino
-$border-color: rgba(0, 40, 150, 0.1); // Borde azul tenue
-$shadow-soft: 0 8px 24px rgba(0, 40, 150, 0.08);  // Sombra suave azulada
-$shadow-hover: 0 12px 32px rgba(0, 40, 150, 0.12);  // Sombra al hover
-
-/* ========== FONDO DE LA PÁGINA ========== */
-.reports-content {
-  --background: #{$azul-grisaceo};
-  padding: 16px;
-  padding-bottom: 350px; // Padding drástico para scroll completo con aire generoso
-  
-  // Asegurar que el contenido se expanda y permita scroll
-  --overflow: auto;
-  min-height: 100%;
+/* Variables Globales (Iguales a Inventario) */
+:host {
+  --page-background: #f4f6f9;
+  --card-background: #ffffff;
+  --primary-color: #325298;
+  --accent-color: #0066ff;
+  --text-dark: #1e293b;
+  --text-medium: #64748b;
+  --border-radius-card: 16px;
 }
 
-/* ========== FILTER CARD ========== */
-.filter-card {
-  margin: 0 0 24px 0;
-  border-radius: $border-radius;
-  border: $border-width solid $border-color;
-  box-shadow: 0 4px 16px rgba(0, 102, 255, 0.12);  // Sombra azulada consistente
-  background: white;
-  
-  &:active {
-    transform: scale(0.98);
-    box-shadow: 0 8px 24px rgba(0, 102, 255, 0.16);
-  }
+ion-content {
+  --background: var(--page-background);
+}
 
-  .filter-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
+/* Header Section */
+.header-section {
+  background: var(--page-background);
+  padding-bottom: 10px;
+}
 
-  ion-segment {
-    --background: #{$azul-grisaceo};
-    border-radius: 12px;
-    padding: 4px;
-    flex: 1;
-    
-    ion-segment-button {
-      --indicator-color: #{$azul-electrico};
-      --color-checked: white;
-      --color: #{$azul-marino};
-      font-weight: 600;
-      min-height: 36px;
-      border-radius: 12px;
-      
-      ion-label {
-        margin: 0;
-        font-size: 13px;
-      }
-    }
-  }
+.title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
 
-  .filter-button {
-    --background: transparent;
-    --color: #{$azul-electrico};
+  .page-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-dark);
     margin: 0;
-    height: 36px;
-    width: 36px;
-    
-    ion-icon {
-      font-size: 20px;
-    }
-    
-    &:active {
-      --background: #{$azul-grisaceo};
-    }
+    .emoji { font-size: 24px; }
   }
 
-  .custom-date-range {
-    margin-top: 12px;
-    display: flex;
-    justify-content: center;
-    
-    .date-chip {
-      --background: #{$azul-electrico};
-      --color: white;
-      font-weight: 600;
-      font-size: 12px;
-      border-radius: 16px;
-      
-      ion-icon {
-        font-size: 16px;
-      }
-    }
+  .date-display {
+    --background: white;
+    --color: var(--primary-color);
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
   }
+}
 
-  .debug-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 12px;
-    font-size: 11px;
-    color: #64748b;
+/* Segmentos (Estilo Chips) */
+.categories-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.custom-segment {
+  --background: transparent;
+  background: transparent;
+  
+  ion-segment-button {
+    --color: var(--text-medium);
+    --color-checked: var(--primary-color);
+    --indicator-color: transparent;
+    --ripple-color: rgba(50, 82, 152, 0.1);
+    margin-right: 8px;
+    min-width: auto;
     
-    .toggle-chip {
-      --background: #{$azul-grisaceo};
-      --color: #{$azul-marino};
-      height: 24px;
-      font-size: 10px;
-      border-radius: 12px;
-      
-      &.chip-active {
-        --background: #{$azul-electrico};
-        --color: white;
-      }
-      
-      ion-icon {
-        font-size: 14px;
-      }
+    &::part(native) {
+      background: white;
+      border-radius: 50px;
+      padding: 8px 16px;
+      height: 40px;
+      border: 1px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    &.segment-button-checked::part(native) {
+      background: var(--primary-color);
+      color: white;
+      box-shadow: 0 4px 12px rgba(50, 82, 152, 0.3);
+    }
+    
+    ion-icon { font-size: 18px; margin-bottom: 2px; }
+    
+    &.segment-button-checked {
+      ion-icon, ion-label { color: white; }
+    }
+    
+    .segment-content {
+      display: flex; align-items: center; gap: 6px;
+      ion-label { font-size: 13px; font-weight: 600; }
     }
   }
 }
 
-/* ========== TÍTULOS DE SECCIÓN ========== */
+/* Títulos de Sección */
 .section-title {
-  font-size: 20px;
-  font-weight: 800;
-  color: $azul-marino;
-  margin: 24px 0 16px 0;
-  padding: 0 4px;
-  letter-spacing: -0.5px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 20px 0 12px 0;
+  padding-left: 4px;
 }
 
-/* ========== GRID DE KPIs (2 por fila) ========== */
+/* KPI Cards (NUEVO DISEÑO) */
 .kpi-grid {
   padding: 0;
-  margin-bottom: 24px;
-  
-  ion-row {
-    margin: 0 -8px;
-  }
+  margin: 0 -5px; // Compensar padding de col
   
   ion-col {
-    padding: 8px;
+    padding: 6px;
   }
 }
 
-.kpi-mini-card {
-  margin: 0;
-  border-radius: $border-radius;
-  border: $border-width solid $border-color;
-  box-shadow: 0 4px 16px rgba(0, 102, 255, 0.12);  // Sombra azulada profesional
+.kpi-card {
   background: white;
+  border-radius: var(--border-radius-card);
+  padding: 16px;
+  margin: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 2px solid #cbd5e1; /* Marco solicitado */
   height: 100%;
-  transition: all 0.3s ease;
-  
-  &:active {
-    transform: translateY(-2px) scale(0.98);
-    box-shadow: 0 8px 24px rgba(0, 102, 255, 0.16);
-    border-color: rgba(0, 40, 150, 0.15);
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
-  .card-header-content {
+  .kpi-icon-wrapper {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    margin-bottom: 12px;
+    font-size: 20px;
     
-    .kpi-icon {
-      font-size: 20px;
-      color: $azul-electrico;
-    }
-  }
-
-  ion-card-header {
-    padding: 16px 16px 8px 16px;
-  }
-
-  ion-card-title {
-    font-size: 10px !important;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: $azul-marino;
-    font-weight: 700;
-    margin: 0;
-  }
-
-  ion-card-content {
-    padding: 8px 16px 16px 16px;
-  }
-
-  .kpi-value {
-    font-size: 24px;
-    font-weight: 900;
-    color: $azul-marino;
-    margin-bottom: 8px;
-    letter-spacing: -0.5px;
-    line-height: 1.2;
-  }
-
-  .kpi-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    flex-wrap: wrap;
-    
-    ion-badge {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 8px;
-      
-      &.success {
-        --background: #10dc60;
-        --color: white;
-      }
-      
-      &.danger {
-        --background: #f04141;
-        --color: white;
-      }
-      
-      ion-icon {
-        font-size: 12px;
-        margin-right: 4px;
-      }
-    }
-    
-    ion-progress-bar {
-      height: 6px;
-      border-radius: 3px;
-      margin-top: 4px;
-      
-      &.progress-success {
-        --background: rgba(16, 220, 96, 0.2);
-        --progress-background: #10dc60;
-      }
-      
-      &.progress-warning {
-        --background: rgba(255, 206, 0, 0.2);
-        --progress-background: #ffce00;
-      }
-      
-      &.progress-danger {
-        --background: rgba(240, 65, 65, 0.2);
-        --progress-background: #f04141;
-      }
-    }
-    
-    .info-chip {
-      --background: #{$azul-grisaceo};
-      --color: #{$azul-marino};
-      height: 22px;
-      font-size: 10px;
-      border-radius: 11px;
-      
-      ion-label {
-        margin: 0;
-        font-weight: 600;
-      }
-    }
+    &.blue { background: rgba(50, 82, 152, 0.1); color: var(--primary-color); }
+    &.green { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+    &.orange { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+    &.purple { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
   }
 
   .kpi-label {
-    font-size: 11px;
-    color: #64748b;
+    font-size: 12px;
+    color: var(--text-medium);
+    margin: 0 0 4px 0;
     font-weight: 600;
   }
+
+  .kpi-value {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin: 0 0 8px 0;
+  }
+
+  .kpi-sub {
+    font-size: 11px;
+    color: var(--text-medium);
+    margin: 0;
+  }
+
+  .kpi-trend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    
+    &.positive { color: #10b981; }
+    &.negative { color: #ef4444; }
+  }
+  
+  .mini-progress {
+    height: 4px;
+    border-radius: 2px;
+    margin-top: 8px;
+  }
 }
 
-/* ========== TARJETAS DE DETALLES (ancho completo) ========== */
+/* Tarjetas Detalle (Gráfico y Listas) */
 .detail-card {
-  margin: 0 0 20px 0;
-  border-radius: $border-radius;
-  border: $border-width solid $border-color;
-  box-shadow: 0 4px 16px rgba(0, 102, 255, 0.12);
+  border-radius: var(--border-radius-card);
+  margin-bottom: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 2px solid #cbd5e1; /* Marco solicitado */
   background: white;
-  transition: all 0.3s ease;
-  
-  &:active {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 102, 255, 0.16);
-    border-color: rgba(0, 40, 150, 0.15);
-  }
-
-  // Especial para tarjeta de resumen sin ion-card-content
-  &.summary-card {
-    display: flex;
-    flex-direction: column;
-    height: auto;
-    min-height: auto;
-  }
-
-  .detail-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    
-    .header-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      
-      ion-icon {
-        font-size: 22px;
-        color: $azul-electrico;
-      }
-    }
-    
-    .refresh-button {
-      --color: #{$azul-electrico};
-      font-size: 12px;
-      font-weight: 600;
-      margin: 0;
-      
-      ion-icon {
-        font-size: 18px;
-      }
-      
-      &:active {
-        --background: #{$azul-grisaceo};
-      }
-    }
-    
-    .count-chip {
-      --background: #{$azul-electrico};
-      --color: white;
-      height: 28px;
-      font-size: 12px;
-      font-weight: 700;
-      border-radius: 14px;
-      
-      ion-label {
-        margin: 0;
-      }
-    }
-  }
+  overflow: hidden;
 
   ion-card-header {
-    padding: 20px 20px 12px 20px;
+    padding: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    
+    .card-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    ion-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+    
+    ion-card-subtitle {
+      font-size: 12px;
+      color: var(--text-medium);
+      margin-top: 2px;
+    }
   }
 
-  ion-card-title {
-    font-size: 16px !important;
-    color: $azul-marino;
-    font-weight: 800;
-    margin: 0;
-    letter-spacing: -0.3px;
+  ion-card-content {
+    padding: 16px;
   }
-
-  // NO usar ion-card-content en tarjeta de resumen, usar .summary-wrapper en su lugar
 }
 
-/* ========== CONTENEDOR DEL GRÁFICO (CRÍTICO PARA RENDERIZADO) ========== */
+/* Contenedor Gráfico */
 .chart-container {
   position: relative;
-  height: 250px;  // Altura fija para que el canvas se renderice correctamente
+  height: 220px;
   width: 100%;
-  margin-top: 8px;
-  border-radius: 12px;
-  overflow: hidden;
-  background: white;
-  
-  canvas {
-    max-width: 100% !important;
-    max-height: 100% !important;
-    display: block !important;
-  }
 }
 
-/* ========== LISTAS MODERNAS ========== */
-.modern-list {
-  background: transparent !important;
-  padding: 0;
+/* Lista de Productos (Estilo Inventario) */
+.product-list-card {
+  padding: 0 !important;
   
-  ion-item {
-    --background: #{$azul-grisaceo};
-    --border-radius: 16px;
+  .product-item {
     --padding-start: 16px;
     --padding-end: 16px;
     --inner-padding-end: 0;
-    margin-bottom: 10px;
-    border: $border-width solid rgba(0, 40, 150, 0.08);
-    transition: all 0.3s ease;
+    --background: transparent;
+    border-bottom: 1px solid #f1f5f9;
     
-    &:active {
-      transform: translateX(4px);
-      --background: white;
-      box-shadow: $shadow-soft;
-      border-color: $border-color;
+    &:last-child {
+      border-bottom: none;
     }
   }
-}
-
-  .product-item,
-.sale-item {
+  
+  .rank-wrapper {
+    margin-right: 12px;
+  }
+  
   .rank-badge {
-    width: 36px;
-    height: 36px;
-    border-radius: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
-    font-weight: 900;
-    margin-right: 12px;
+    font-weight: 800;
+    font-size: 13px;
     color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);  // Sombra más oscura para badges
     
-    &.rank-1 {
-      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-    }
-    
-    &.rank-2 {
-      background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
-    }
-    
-    &.rank-3 {
-      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
-    }
-    
-    &:not(.rank-1):not(.rank-2):not(.rank-3) {
-      background: linear-gradient(135deg, #{$azul-medio} 0%, #{$azul-electrico} 100%);
-    }
+    &.rank-1 { background: #f59e0b; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4); }
+    &.rank-2 { background: #94a3b8; }
+    &.rank-3 { background: #d97706; }
+    &.rank-4, &.rank-5 { background: var(--primary-color); opacity: 0.8; }
   }
-}
 
-.product-name,
-.sale-product {
-  font-size: 15px;
-  font-weight: 800;
-  color: $azul-marino;
-  margin-bottom: 6px;
-  line-height: 1.3;
-}
-
-.product-details,
-.sale-details {
-  font-size: 12px;
-  color: #64748b;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 4px;
-  
-  ion-icon {
+  .product-name {
     font-size: 14px;
-    color: $azul-electrico;
-  }
-}
-
-.product-total,
-.sale-total {
-  text-align: right;
-}
-
-.price-value {
-  font-size: 16px;
-  font-weight: 900;
-  color: $azul-electrico;
-  margin-bottom: 4px;
-}
-
-.percentage-badge {
-  --background: #{$azul-electrico};
-  --color: white;
-  font-size: 10px;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-weight: 700;
-}
-
-.sale-quantity {
-  font-size: 11px;
-  color: #64748b;
-  font-weight: 600;
-}
-
-.success-icon {
-  color: #10dc60;
-  font-size: 20px;
-}
-
-.empty-state {
-  ion-label {
-    padding: 40px 0;
-    
-    ion-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-      opacity: 0.4;
-      color: $azul-electrico;
-    }
-    
-    p {
-      color: #64748b;
-      font-size: 14px;
-      margin-top: 8px;
-      font-weight: 600;
-    }
-  }
-}
-
-/* ========== RESUMEN (GRID FIJO) ========== */
-.summary-wrapper {
-  // Wrapper que reemplaza ion-card-content
-  padding: 20px 20px 40px 20px;  // Aumentado padding inferior
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);  // 2 columnas en móvil
-  gap: 16px;                              // Aumentado espacio entre items
-  width: 100%;                            // Ancho completo
-  box-sizing: border-box;                 // Incluir padding
-  height: auto;                           // Altura automática al contenido
-  min-height: auto;
-  
-  // En tablet y desktop: 4 columnas
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(4, 1fr);  // 4 columnas en tablet+
-    gap: 20px;  // Mayor separación en tablets
-    padding: 24px 24px 40px 24px;
-  }
-  
-  @media (min-width: 1024px) {
-    padding: 32px 32px 50px 32px;
-    gap: 24px;
-  }
-}
-
-.summary-item {
-  text-align: center;
-  padding: 20px 12px;  // Aumentado padding
-  background: $azul-grisaceo;
-  border-radius: 16px;
-  border: $border-width solid rgba(0, 40, 150, 0.08);
-  transition: all 0.3s ease;
-  min-height: 120px;  // Aumentada altura mínima
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  word-wrap: break-word;
-  
-  &:active {
-    transform: translateY(-2px);
-    box-shadow: $shadow-soft;
-    background: white;
-  }
-  
-  .summary-label {
-    font-size: 11px;
-    color: #64748b;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;  // Aumentado margen
-    line-height: 1.2;
+    color: var(--text-dark);
+    margin-bottom: 4px;
   }
   
-  .summary-value {
-    font-size: 20px;  // Aumentado tamaño fuente
-    font-weight: 900;
-    color: $azul-marino;
-    line-height: 1.3;
+  .product-meta {
+    display: flex;
+    align-items: center;
     
-    &.success {
-      color: #10dc60;
+    .qty-badge {
+      font-weight: 600;
+      color: var(--text-medium);
+      --background: #f1f5f9;
     }
     
-    &.danger {
-      color: #f04141;
-    }
-  }
-}
-
-/* ========== FAB BUTTONS ========== */
-ion-fab {
-  .fab-button {
-    --background: #{$azul-electrico};
-    --box-shadow: #{$shadow-soft};
-    width: 56px;
-    height: 56px;
-    
-    ion-icon {
-      font-size: 28px;
-      color: white;
+    .meta-dot {
+      margin: 0 6px;
+      color: #cbd5e1;
+      font-size: 10px;
     }
     
-    &:active {
-      transform: scale(0.95);
-      --box-shadow: #{$shadow-hover};
+    .meta-percentage {
+      font-size: 11px;
+      color: var(--text-medium);
     }
   }
   
-  ion-fab-list {
-    .fab-action {
-      width: 48px;
-      height: 48px;
-      margin: 8px 0;
-      --background: white;
-      --box-shadow: #{$shadow-soft};
-      border: $border-width solid $border-color;
-      border-radius: 16px;
-      
-      ion-icon {
-        font-size: 22px;
-        color: $azul-electrico;
-      }
-      
-      &:active {
-        transform: scale(0.95);
-        --background: #{$azul-grisaceo};
-      }
+  .price-column {
+    text-align: right;
+    
+    .total-price {
+      display: block;
+      font-weight: 700;
+      color: var(--primary-color);
+      font-size: 14px;
     }
   }
 }
 
-/* ========== LOADING SKELETON MEJORADO CON SOFT UI ========== */
-.loading-container {
-  .skeleton-card {
-    animation: pulse 1.5s ease-in-out infinite;
-    border-radius: $border-radius;
-    border: $border-width solid $border-color;
-    box-shadow: $shadow-soft;
-    background: white;
-  }
-  
-  .skeleton-chart {
-    background: #{$azul-grisaceo};
-    border-radius: 12px;
-    overflow: hidden;
-    border: $border-width solid rgba(0, 40, 150, 0.05);
-  }
-  
-  .skeleton-item {
-    --background: #{$azul-grisaceo};
-    margin-bottom: 10px;
-    border-radius: 16px;
-    border: $border-width solid rgba(0, 40, 150, 0.05);
-  }
-  
-  ion-skeleton-text {
-    --background: #{$azul-grisaceo};
-    --background-rgb: 232, 240, 248;
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-/* ========== ESPACIADO FINAL PARA SCROLL ========== */
-.content-spacer {
-  height: auto; // Auto para responder al contenido dinámico
-  width: 100%;
-  padding-bottom: 30px; // Extra padding para asegurar que Resumen sea visible
-}
-
-/* ========== MENSAJE DE GRÁFICO VACÍO ========== */
-.empty-chart-message {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
+/* Empty State */
+.empty-state {
   text-align: center;
+  padding: 40px 20px;
+  color: var(--text-medium);
   
   ion-icon {
-    font-size: 64px;
-    color: $azul-electrico;
-    opacity: 0.4;
-    margin-bottom: 16px;
+    font-size: 40px;
+    margin-bottom: 10px;
+    opacity: 0.5;
   }
-  
-  p {
-    color: #64748b;
-    font-size: 14px;
+  p { margin: 0; font-size: 14px; }
+}
+
+/* FAB */
+ion-fab {
+  margin-bottom: 20px;
+  margin-right: 20px;
+}
+
+.main-fab {
+  --background: var(--accent-color);
+  --box-shadow: 0 4px 15px rgba(0, 102, 255, 0.4);
+  --color: white;
+}
+
+.bottom-spacer {
+  height: 80px;
+}
+
+/* Skeleton */
+ion-skeleton-text {
+  --background: #e2e8f0;
+  --background-rgb: 226, 232, 240;
+}
+
+ion-content {
+  --background: #f8fafc;
+}
+
+/* Header Compacto */
+.compact-header {
+  background: #fff;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f1f5f9;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+
+  .page-title {
+    font-size: 20px; /* Reducido de 28px */
+    font-weight: 800;
+    margin: 0;
+    color: #1e293b;
+  }
+
+  .date-chip {
+    height: 28px;
+    font-size: 11px;
+    --background: #f1f5f9;
+    --color: #325298;
     font-weight: 600;
     margin: 0;
   }
 }
 
-/* ========== RESPONSIVE ========== */
-@media (min-width: 768px) {
-  .kpi-grid {
-    ion-col {
-      padding: 10px;
+.segment-wrapper {
+  .mini-segment {
+    height: 32px;
+    --background: #f1f5f9;
+    
+    ion-segment-button {
+      min-height: 30px;
+      font-size: 11px;
+      font-weight: 600;
+      --indicator-color: #fff;
+      --color-checked: #325298;
     }
-  }
-  
-  .kpi-mini-card {
-    .kpi-value {
-      font-size: 28px;
-    }
-  }
-  
-  .chart-container {
-    height: 320px;  // Mayor altura en tablets
   }
 }
 
-@media (min-width: 1024px) {
-  .reports-content {
-    padding: 24px;
-    max-width: 1200px;
-    margin: 0 auto;
+/* Dashboard Content */
+.dashboard-content {
+  padding: 12px;
+}
+
+/* KPI Box Compacto */
+.kpi-grid {
+  padding: 0;
+  margin: 0 -4px;
+  ion-col { padding: 4px; }
+}
+
+.kpi-box {
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+
+  &.blue { border-left: 3px solid #3b82f6; }
+  &.green { border-left: 3px solid #10b981; }
+  &.orange { border-left: 3px solid #f59e0b; }
+  &.purple { border-left: 3px solid #8b5cf6; }
+
+  .label { font-size: 11px; color: #64748b; margin-bottom: 4px; }
+  .value { font-size: 18px; font-weight: 800; color: #1e293b; }
+  
+  .trend {
+    font-size: 10px; font-weight: 700; margin-top: 4px; display: flex; align-items: center; gap: 2px;
+    &.up { color: #10b981; }
+    &.down { color: #ef4444; }
+  }
+}
+
+/* Chart Card */
+.chart-card {
+  margin: 16px 0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  background: white;
+  
+  ion-card-content { padding: 12px; }
+
+  .card-title-row {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+    h3 { font-size: 14px; font-weight: 700; margin: 0; }
+    ion-icon { font-size: 16px; color: #64748b; }
+  }
+
+  .chart-wrapper {
+    height: 200px;
+    width: 100%;
+  }
+}
+
+/* Lista Productos */
+.section-header {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 16px 0 8px 4px;
+}
+
+.products-list {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.product-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid #f8fafc;
+
+  &:last-child { border-bottom: none; }
+
+  .rank {
+    width: 20px; font-weight: 700; font-size: 12px; color: #cbd5e1;
   }
   
-  .kpi-grid {
-    max-width: 1000px;
-    margin: 0 auto 24px auto;
+  .info {
+    flex: 1;
+    .name { font-size: 13px; font-weight: 600; color: #1e293b; }
+    .sub { font-size: 10px; color: #94a3b8; }
   }
   
-  .detail-card {
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
+  .price {
+    font-size: 13px; font-weight: 700; color: #325298;
   }
+}
+
+.empty-msg {
+  padding: 20px; text-align: center; font-size: 12px; color: #94a3b8;
+}
+
+/* Spacer para el scroll */
+.scroll-spacer {
+  height: 100px; /* Suficiente espacio para que el FAB no tape el contenido final */
+}
+
+/* FAB */
+.mini-fab {
+  --background: #325298;
+  width: 48px; height: 48px;
+  ion-icon { font-size: 20px; }
+}
+
+
+// Header Miski - Estilos Unificados
+
+.header-miski {
+  ion-toolbar {
+    --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --padding-top: -7px;
+    --padding-bottom: 12px;
+    --min-height: 70px;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+
+    ion-title {
+      padding: 0;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+// Contenedor del logo
+.logo-container {
+  display: flex;
+  align-items: center;
+  min-width: 50px;
+  ion-buttons {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+// Titulo con logo
+.logo-title {
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 1;
+}
+
+// Imagen del logo
+.logo-image {
+  height: 65px;
+  object-fit: contain;
+}
+
+// Botón del avatar
+.avatar-button {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --min-height: 65px;
+  --min-width: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Imagen del avatar
+.avatar-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+// Botón atrás
+ion-back-button {
+  --color: rgba(255, 255, 255, 0.9);
+  min-width: 40px;
+  margin-right: 8px;
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  ion-icon {
+    font-size: 24px !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .header-miski {
+    ion-toolbar {
+      --min-height: 65px;
+    }
+  }
+
+  .logo-image {
+    height: 65px;
+  }
+
+  .avatar-image {
+    width: 50;
+    height: 50px;
+  }
+}
+
+/* --- ESTILOS DEL HEADER MANUAL --- */
+ion-toolbar {
+  --background: #325298; /* Azul primario */
+  --color: white;
+  padding: 0 8px;
+}
+
+.logo-container {
+  display: flex; align-items: center; padding-left: 8px;
+  .nav-icon { height: 28px; width: auto; }
+}
+
+.logo-title {
+  display: flex; justify-content: center; align-items: center;
+  .logo-image { height: 32px; width: auto; object-fit: contain; }
+}
+
+.avatar-wrapper {
+  margin-right: 8px;
+  height: 36px; width: 36px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.8);
+  overflow: hidden;
+  .avatar-image { width: 100%; height: 100%; object-fit: cover; }
+}
+
+/* --- ESPACIADOR FINAL --- */
+.bottom-spacer {
+  height: 120px; /* Suficiente espacio para que el scroll llegue al final */
+}
+
+
+/* Estilos para etiquetas del FAB */
+ion-fab-list ion-fab-button[data-desc] {
+  overflow: visible;
+  position: relative;
   
-  .section-title {
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 4px;
+  &::after {
+    content: attr(data-desc);
+    position: absolute;
+    right: 50px; /* Posición a la izquierda del botón */
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(30, 41, 59, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
   }
-  
-  .chart-container {
-    height: 350px;  // Mayor altura en desktop
-  }
+}
+
+/* Mostrar etiqueta cuando el FAB principal está activo */
+ion-fab-button.main-fab:active ~ ion-fab-list ion-fab-button[data-desc]::after,
+ion-fab-button.main-fab:focus ~ ion-fab-list ion-fab-button[data-desc]::after,
+ion-fab-list[side="top"] ion-fab-button[data-desc]::after {
+  opacity: 1;
 }

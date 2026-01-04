@@ -1,38 +1,64 @@
-<app-header-miski></app-header-miski>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="miski-toolbar">
+    
+    <div slot="start" class="header-left-icon">
+      <img src="assets/icon/Leading_icon.svg" 
+           alt="Inicio" 
+           (click)="irAlInicio()">
+    </div>
 
-<ion-content [fullscreen]="true" (click)="hideRecentSearches()" class="ion-padding-top">
+    <ion-title class="header-logo-center">
+      <img src="assets/icon/holaa-Photoroom.png" alt="Logo MISKY">
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <div class="header-avatar-right" (click)="irAlPerfil()">
+        <div class="avatar-circle">
+          <img [src]="avatarUrl" alt="Perfil">
+        </div>
+      </div>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="bg-light ion-padding">
   
-  <!-- Grid de botones organizados -->
+  <div class="welcome-section">
+    <h1>Menú Principal</h1>
+    <p>Selecciona una opción para comenzar</p>
+  </div>
+
   <div class="botones-grid">
-    <!-- Fila 1 -->
+    
     <div class="boton-item" (click)="iraInventario()">
-      <div class="icono-boton">
+      <div class="icono-container azul">
         <ion-icon name="cube-outline"></ion-icon>
       </div>
       <p class="boton-label">Inventario</p>
     </div>
 
-    <div class="boton-item" (click)="aPerfil()">
-      <div class="icono-boton">
+    <div class="boton-item" (click)="irAlPerfil()">
+      <div class="icono-container verde">
         <ion-icon name="person-outline"></ion-icon>
       </div>
       <p class="boton-label">Perfil</p>
     </div>
 
-    <!-- Fila 2 -->
     <div class="boton-item" (click)="iraReporte()">
-      <div class="icono-boton">
+      <div class="icono-container naranja">
         <ion-icon name="bar-chart-outline"></ion-icon>
       </div>
       <p class="boton-label">Reportes</p>
     </div>
 
     <div class="boton-item" (click)="irMovimientos()">
-      <div class="icono-boton">
+      <div class="icono-container morado">
         <ion-icon name="git-compare-outline"></ion-icon>
       </div>
       <p class="boton-label">Movimientos</p>
     </div>
+
   </div>
 
-
+</ion-content>
