@@ -1,28 +1,26 @@
-import { Component } from '@angular/core';
-
-import { RouterLink } from '@angular/router';
-
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { 
-  
   IonHeader, 
   IonToolbar, 
   IonTitle, 
   IonContent,
-  IonButton,
-  IonRippleEffect, 
-  IonAvatar, 
-  IonIcon,
-  IonItem,
-  IonInput,
-  IonList,
-  IonLabel,
-  NavController
+  IonButton, 
+  IonButtons,
+  IonIcon
 } from '@ionic/angular/standalone';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { menuOutline, searchOutline, cubeOutline, arrowUndoOutline, barChartOutline, personOutline, swapHorizontalOutline, gitCompareOutline } from 'ionicons/icons';
-import { HeaderMiskiComponent } from '../header-miski/header-miski.component';
+import { 
+  cubeOutline, 
+  personOutline, 
+  barChartOutline, 
+  gitCompareOutline,
+  menuOutline, 
+  searchOutline 
+} from 'ionicons/icons';
+import { UserProfileService } from '../services/user-profile.service'; // <--- IMPORTANTE
 
 @Component({
   selector: 'app-button',
@@ -30,113 +28,77 @@ import { HeaderMiskiComponent } from '../header-miski/header-miski.component';
   styleUrls: ['button.page.scss'],
   standalone: true,
   imports: [
-    RouterLink,
+    CommonModule,
+    FormsModule,
     IonHeader, 
     IonToolbar, 
     IonTitle, 
     IonContent,
     IonButton, 
-    IonRippleEffect,
-    IonAvatar, 
-    IonIcon,
-    FormsModule,
-    CommonModule,     
-    IonItem,          
-    IonInput,
-    IonList,
-    IonLabel,
-    HeaderMiskiComponent
+    IonButtons,
+    IonIcon
   ],
 })
-
 export class ButtonPage {
   
+  private router = inject(Router);
+  private userProfileService = inject(UserProfileService); 
+  avatarUrl: string = 'assets/icon/login.png';
 
-
-  searchQuery: string = '';
-  recentSearches: string[] = ['Detergente', 'Lejia', 'Jabon en polvo', 'Suavizante'];
-
-  // 5. NUEVA VARIABLE: para mostrar/ocultar la lista
-  isRecentVisible: boolean = false;
-
-  // 6. Quita PopoverController del constructor
-  constructor(private navCtrl: NavController) {
-    addIcons({cubeOutline,personOutline,barChartOutline,gitCompareOutline,menuOutline,searchOutline});
+  constructor() {
+    addIcons({
+      cubeOutline,
+      personOutline,
+      barChartOutline,
+      gitCompareOutline,
+      menuOutline,
+      searchOutline
+    });
   }
 
-
-
-
-  // 7. NUEVA FUNCIÓN: para mostrar/ocultar la lista
-  // Usamos event.stopPropagation() para evitar que el clic
-  // en el contenido cierre la lista inmediatamente.
-  toggleRecentSearches(event: Event) {
-    event.stopPropagation();
-    this.isRecentVisible = !this.isRecentVisible;
+  ngOnInit() {
+    // ESTO HACE LA MAGIA: Escucha cambios en tiempo real
+    this.userProfileService.userProfile$.subscribe(profile => {
+      if (profile && profile.photoURL) {
+        this.avatarUrl = profile.photoURL;
+      }
+    });
   }
 
-  // 8. NUEVA FUNCIÓN: para seleccionar un item de la lista
-  selectSearch(search: string) {
-    this.searchQuery = search;
-    this.isRecentVisible = false; // Oculta la lista
-    this.performSearch(); // Opcional: buscar al seleccionar
-  }
-  
-  // Tu lógica de búsqueda
-  performSearch() {
-    console.log('Buscando:', this.searchQuery);
-    this.isRecentVisible = false; // Oculta la lista al buscar
-    
-    if (this.searchQuery && !this.recentSearches.includes(this.searchQuery)) {
-      this.recentSearches.unshift(this.searchQuery);
-      this.recentSearches = this.recentSearches.slice(0, 5);
-    }
+  // --- Funciones de Navegación ---
+
+  irAlInicio() {
+    this.router.navigate(['/home-miski']);
   }
 
-  tuFuncion(){
-    console.log("Boton presionado");
-    this.isRecentVisible = false; // Oculta la lista si se presiona el avatar
+  irAlPerfil() {
+    this.router.navigate(['/perfil-miski']);
   }
 
-  // 9. NUEVA FUNCIÓN: para cerrar la lista si se hace clic en el contenido
-  hideRecentSearches() {
-    this.isRecentVisible = false;
+  // Compatible con tu HTML anterior si usaba aPerfil
+  aPerfil() {
+    this.irAlPerfil();
   }
 
   iraInventario() {
-    this.navCtrl.navigateForward('/inventario-miski');
-    // O la ruta que tengas configurada para registro
+    this.router.navigate(['/inventario-miski']);
   }
 
-
-
-aPerfil() {
-    this.navCtrl.navigateForward('/perfil-miski');
-    // O la ruta que tengas configurada para registro
-  }
-
-iraReporte(){
-   this.navCtrl.navigateForward('/reportee');
-    // O la ruta que tengas configurada para registro
-  }
-
-iraMovimientos() {
-    this.navCtrl.navigateForward('/movimientos-miski');
+  iraReporte() {
+    this.router.navigate(['/reportee']);
   }
 
   irMovimientos() {
-    this.navCtrl.navigateForward('/movimientos-miski');
+    this.router.navigate(['/movimientos-miski']);
+  }
+  
+  // Compatible con posible nombre anterior
+  iraMovimientos() {
+    this.irMovimientos();
   }
 
+  // Función dummy para el click en content
+  hideRecentSearches() {
+    // Ya no se usa la búsqueda aquí, pero evita errores si el HTML lo llama
+  }
 }
-
-
-
-
-
-
-
-
-
-
-

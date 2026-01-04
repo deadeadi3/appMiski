@@ -1,67 +1,84 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { Auth, onAuthStateChanged } from '@angular/fire/auth';
+import { Firestore, doc, docData, setDoc } from '@angular/fire/firestore';
+import { Observable, BehaviorSubject } from 'rxjs';
 
+// 1. INTERFAZ CORREGIDA (Incluye tus datos reales + emailVerified)
 export interface UserProfile {
-  id?: string;
-  name?: string;
-  email?: string;
-  avatar?: string;
-  phone?: string;
+  uid: string;
+  email: string;
+  nombre: string;
+  apellidos: string;
+  dni: string;
+  usuario: string;
+  activo: boolean;
+  photoURL?: string;
+  fechaCreacion?: any;
+  emailVerified?: boolean; // <--- Agregado de nuevo para corregir el error
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserProfileService {
-  private avatarSubject = new BehaviorSubject<string>('assets/icon/login2.svg');
-  public avatar$ = this.avatarSubject.asObservable();
+  private auth = inject(Auth);
+  private firestore = inject(Firestore);
 
-  private userProfileSubject = new BehaviorSubject<UserProfile>({
-    avatar: 'assets/icon/login2.svg'
-  });
+  private userProfileSubject = new BehaviorSubject<UserProfile | null>(null);
   public userProfile$ = this.userProfileSubject.asObservable();
 
   constructor() {
-    this.loadUserProfile();
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        this.cargarDatosTiempoReal(user.uid);
+      } else {
+        this.userProfileSubject.next(null);
+      }
+    });
   }
 
-  private loadUserProfile() {
-    // Cargar del localStorage o de Firebase si está disponible
-    const savedProfile = localStorage.getItem('userProfile');
-    if (savedProfile) {
-      const profile = JSON.parse(savedProfile);
-      this.userProfileSubject.next(profile);
-      this.avatarSubject.next(profile.avatar || 'assets/icon/login2.svg');
-    }
+  private cargarDatosTiempoReal(uid: string) {
+    // Apuntamos a la colección correcta 'usuarios'
+    const userDocRef = doc(this.firestore, `usuarios/${uid}`);
+    
+    docData(userDocRef, { idField: 'uid' }).subscribe((data: any) => {
+      const currentUser = this.auth.currentUser;
+      const dbData = data || {};
+
+      const fullProfile: UserProfile = {
+        uid: uid,
+        email: dbData['email'] || currentUser?.email || '',
+        // Aquí recuperamos el estado de verificación desde Auth
+        emailVerified: currentUser?.emailVerified || false, 
+        
+        // Tus datos personalizados de la BD
+        nombre: dbData['nombre'] || '',
+        apellidos: dbData['apellidos'] || '',
+        dni: dbData['dni'] || '',
+        usuario: dbData['usuario'] || '',
+        activo: dbData['activo'] !== undefined ? dbData['activo'] : true,
+        photoURL: dbData['photoURL'] || currentUser?.photoURL || 'assets/icon/login.png',
+        fechaCreacion: dbData['fechaCreacion']
+      };
+
+      this.userProfileSubject.next(fullProfile);
+    });
   }
 
-  getAvatar(): Observable<string> {
-    return this.avatar$;
-  }
-
-  getUserProfile(): Observable<UserProfile> {
+  getUserProfile(): Observable<UserProfile | null> {
     return this.userProfile$;
   }
 
-  setUserProfile(profile: UserProfile) {
-    localStorage.setItem('userProfile', JSON.stringify(profile));
-    this.userProfileSubject.next(profile);
-    if (profile.avatar) {
-      this.avatarSubject.next(profile.avatar);
-    }
-  }
+  async updateUserProfile(data: Partial<UserProfile>): Promise<void> {
+    const user = this.auth.currentUser;
+    if (!user) throw new Error('No hay usuario autenticado');
 
-  setAvatar(avatarUrl: string) {
-    const currentProfile = this.userProfileSubject.value;
-    const updatedProfile = { ...currentProfile, avatar: avatarUrl };
-    this.setUserProfile(updatedProfile);
-  }
-
-  getCurrentAvatar(): string {
-    return this.avatarSubject.value;
-  }
-
-  getCurrentProfile(): UserProfile {
-    return this.userProfileSubject.value;
+    const userDocRef = doc(this.firestore, `usuarios/${user.uid}`);
+    
+    // Guardamos usando setDoc con merge
+    await setDoc(userDocRef, {
+      ...data,
+      updatedAt: new Date()
+    }, { merge: true });
   }
 }

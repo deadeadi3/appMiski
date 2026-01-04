@@ -1,46 +1,52 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Editar Datos Personales</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar color="light">
+    <ion-title>Editar Perfil</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+      <ion-button (click)="cerrar()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form>
-    <ion-item>
-      <ion-label position="stacked">Nombre *</ion-label>
-      <ion-input [(ngModel)]="editedData.nombre" name="nombre" placeholder="Ingresa tu nombre"></ion-input>
-    </ion-item>
+  
+  <form [formGroup]="formulario" (ngSubmit)="guardar()">
+    
+    <div class="avatar-edit-container">
+      <div class="avatar-wrapper" (click)="seleccionarOrigenImagen()">
+        <img [src]="imagenPreview || 'assets/icon/login.png'" alt="Avatar Preview">
+        <div class="camera-overlay">
+          <ion-icon name="camera-outline"></ion-icon>
+        </div>
+      </div>
+      <p class="change-photo-text" (click)="seleccionarOrigenImagen()">Cambiar foto</p>
+      <input type="hidden" formControlName="photoURL">
+    </div>
 
-    <ion-item>
-      <ion-label position="stacked">Apellidos</ion-label>
-      <ion-input [(ngModel)]="editedData.apellidos" name="apellidos" placeholder="Ingresa tus apellidos"></ion-input>
-    </ion-item>
+    <div class="form-fields">
+      
+      <ion-item class="custom-input" lines="none">
+        <ion-label position="stacked">Nombre</ion-label>
+        <ion-input formControlName="nombre" type="text" placeholder="Tu nombre"></ion-input>
+        <ion-icon slot="start" name="person-outline" class="input-icon"></ion-icon>
+      </ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">DNI</ion-label>
-      <ion-input [(ngModel)]="editedData.dni" name="dni" placeholder="Ingresa tu DNI"></ion-input>
-    </ion-item>
+      <ion-item class="custom-input" lines="none">
+        <ion-label position="stacked">Apellidos</ion-label>
+        <ion-input formControlName="apellidos" type="text" placeholder="Tus apellidos"></ion-input>
+        <ion-icon slot="start" name="person-outline" class="input-icon"></ion-icon>
+      </ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">Usuario</ion-label>
-      <ion-input [(ngModel)]="editedData.usuario" name="usuario" placeholder="Ingresa tu usuario"></ion-input>
-    </ion-item>
+    </div>
 
-    <ion-item>
-      <ion-label position="stacked">Email *</ion-label>
-      <ion-input [(ngModel)]="editedData.email" name="email" type="email" placeholder="Ingresa tu email"></ion-input>
-    </ion-item>
+    <div class="actions">
+      <ion-button expand="block" type="submit" shape="round" class="save-btn" [disabled]="formulario.invalid">
+        <ion-icon slot="start" name="save-outline"></ion-icon>
+        Guardar Cambios
+      </ion-button>
+    </div>
 
-    <ion-item>
-      <ion-label position="stacked">Teléfono</ion-label>
-      <ion-input [(ngModel)]="editedData.telefono" name="telefono" type="tel" placeholder="Ingresa tu teléfono"></ion-input>
-    </ion-item>
-
-    <ion-button expand="full" (click)="guardarCambios()" color="primary">
-      Guardar Cambios
-    </ion-button>
   </form>
+
 </ion-content>

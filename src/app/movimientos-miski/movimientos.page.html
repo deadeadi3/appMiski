@@ -1,4 +1,26 @@
-<app-header-miski></app-header-miski>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="miski-toolbar">
+    
+    <div slot="start" class="header-left-icon">
+      <img src="assets/icon/Leading_icon.svg" 
+           alt="Inicio" 
+           (click)="irAlInicio()">
+    </div>
+
+    <ion-title class="header-logo-center">
+      <img src="assets/icon/holaa-Photoroom.png" alt="Logo MISKY">
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <div class="header-avatar-right" (click)="irAlPerfil()">
+        <div class="avatar-circle">
+          <img [src]="avatarUrl" alt="Perfil">
+        </div>
+      </div>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
 
 <ion-content class="ion-padding">
 

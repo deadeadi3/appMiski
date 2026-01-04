@@ -7,29 +7,7 @@ ion-content {
   --background: #f4f6f9; // Fondo gris suave
 }
 
-// --- HEADER NUEVO (Estilo Misky) ---
-ion-toolbar {
-  --background: #ffffff; // Fondo BLANCO
-  display: flex;
-  align-items: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
 
-// Estilo del Logo
-.mi-imagen-personalizada {
-  height: 60px; // Ajustado para que quepa bien con el botón atrás
-  margin-left: 10px;
-  vertical-align: middle;
-}
-
-// Estilo del Avatar
-ion-avatar {
-  height: 45px;
-  width: 45px;
-  margin-right: 15px;
-  border: 2px solid #f0f0f0; // Un borde suave opcional
-}
 
 // --- TÍTULO SECCIÓN ---
 .titulo-seccion {
