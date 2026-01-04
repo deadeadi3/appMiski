@@ -1,0 +1,93 @@
+/* Código CSS */
+.contenedor-imagen {
+    /* 1. Centra horizontalmente el contenido 'inline', incluida la imagen. */
+    text-align: center;
+    margin-top: 100px;
+}
+.contenedor-imagen2{
+    text-align: center;
+     margin-top: 3px;
+
+}
+
+ion-item {
+  --padding-start: 0;
+  margin-bottom: 10px;
+}
+
+ion-label {
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+ion-button {
+  margin-top: 20px;
+}
+
+.login-button {
+  --border-radius: 12px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  height: 45px;
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: none; // Elimina las mayúsculas automáticas
+  letter-spacing: 0.5px;
+  margin-top: 24px;
+  
+  // Opcional: Agregar un gradiente o color personalizado
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  
+  // Efecto hover (solo en web)
+  &:hover {
+    --background: linear-gradient(135deg, #5568d3 0%, #66398d 100%);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+  }
+  
+  // Efecto al presionar
+  &:active {
+    transform: translateY(0);
+
+  }
+
+
+    font-family: 'Poppins', sans-serif; // Aquí agregas la fuente
+
+}
+
+.poppins-content{
+
+        font-family: 'Poppins', sans-serif; // Aquí agregas la fuente
+
+}
+
+//Boton No tienes cuenta
+
+.crear-cuenta-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.crear-cuenta-texto {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.link-crear-cuenta {
+  color: #3880ff; // Azul de Ionic
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+  
+  &:hover {
+    color: #2b67d1; // Azul más oscuro al pasar el mouse
+  }
+  
+  &:active {
+    color: #1e4d99;
+  }
+}

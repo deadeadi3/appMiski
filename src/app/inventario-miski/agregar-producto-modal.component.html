@@ -1,0 +1,157 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="cerrarModal()">
+        <ion-icon slot="start" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="Clasita">Nuevo Producto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="formulario">
+    <!-- Sección de imagen previa -->
+    <div class="imagen-preview-section">
+      <div class="imagen-container">
+        <img [src]="imagenPrevia" [alt]="formulario.get('name')?.value || 'Producto'">
+      </div>
+      <p class="imagen-hint">Carga la URL de la imagen del producto</p>
+    </div>
+
+    <!-- Campo de URL de imagen -->
+    <ion-item class="ion-margin-bottom">
+      <ion-label position="stacked">
+        <ion-icon name="image-outline"></ion-icon>
+        URL de la imagen
+      </ion-label>
+      <ion-input
+        formControlName="image"
+        placeholder="https://ejemplo.com/imagen.jpg"
+        type="url"
+        (change)="actualizarImagenPrevia($event)"
+        [class.input-invalid]="esCampoInvalido('image')">
+      </ion-input>
+    </ion-item>
+
+    <!-- Campo nombre -->
+    <ion-item class="ion-margin-bottom">
+      <ion-label position="stacked">
+        <ion-icon name="pricetag-outline"></ion-icon>
+        Nombre del producto *
+      </ion-label>
+      <ion-input
+        formControlName="name"
+        placeholder="Ej: Limpiador Multiusos"
+        type="text"
+        [class.input-invalid]="esCampoInvalido('name')">
+      </ion-input>
+      <ion-note *ngIf="esCampoInvalido('name')" slot="helper" color="danger">
+        {{ obtenerErrorCampo('name') }}
+      </ion-note>
+    </ion-item>
+
+    <!-- Campo código -->
+    <ion-item class="ion-margin-bottom">
+      <ion-label position="stacked">
+        <ion-icon name="barcode-outline"></ion-icon>
+        Código del producto *
+      </ion-label>
+      <ion-input
+        formControlName="code"
+        placeholder="Ej: PROD001"
+        type="text"
+        [class.input-invalid]="esCampoInvalido('code')">
+      </ion-input>
+      <ion-note *ngIf="esCampoInvalido('code')" slot="helper" color="danger">
+        {{ obtenerErrorCampo('code') }}
+      </ion-note>
+    </ion-item>
+
+    <!-- Campo categoría -->
+    <ion-item class="ion-margin-bottom">
+      <ion-label position="stacked">
+        <ion-icon name="folder-outline"></ion-icon>
+        Categoría *
+      </ion-label>
+      <ion-select formControlName="category" [compareWith]="compareFn">
+        <ion-select-option *ngFor="let cat of categorias" [value]="cat">
+          {{ cat | titlecase }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Campo teléfono de contacto -->
+    <ion-item class="ion-margin-bottom">
+      <ion-label position="stacked">
+        <ion-icon name="call-outline"></ion-icon>
+        Teléfono de contacto
+      </ion-label>
+      <ion-input
+        formControlName="telefono_de_contacto"
+        placeholder="+57 (123) 456-7890"
+        type="tel"
+        [class.input-invalid]="esCampoInvalido('telefono_de_contacto')">
+      </ion-input>
+      <ion-note *ngIf="esCampoInvalido('telefono_de_contacto')" slot="helper" color="danger">
+        {{ obtenerErrorCampo('telefono_de_contacto') }}
+      </ion-note>
+    </ion-item>
+
+    <!-- Campo stock -->
+    <ion-item class="ion-margin-bottom">
+      <ion-label position="stacked">
+        <ion-icon name="cube-outline"></ion-icon>
+        Stock inicial *
+      </ion-label>
+      <ion-input
+        formControlName="stock"
+        placeholder="0"
+        type="number"
+        min="0"
+        [class.input-invalid]="esCampoInvalido('stock')">
+      </ion-input>
+      <ion-note *ngIf="esCampoInvalido('stock')" slot="helper" color="danger">
+        {{ obtenerErrorCampo('stock') }}
+      </ion-note>
+    </ion-item>
+
+    <!-- Campo descripción -->
+    <ion-item class="ion-margin-bottom">
+      <ion-label position="stacked">
+        <ion-icon name="document-text-outline"></ion-icon>
+        Descripción
+      </ion-label>
+      <ion-textarea
+        formControlName="description"
+        placeholder="Escribe una descripción del producto (opcional)"
+        rows="3">
+      </ion-textarea>
+    </ion-item>
+
+    <!-- Botones de acción -->
+    <div class="botones-container">
+      <ion-button
+        expand="block"
+        fill="solid"
+        color="primary"
+        [disabled]="!formulario.valid || cargando"
+        (click)="guardarProducto()">
+        <ion-icon slot="start" name="checkmark-done-outline"></ion-icon>
+        {{ cargando ? '⏳ Guardando...' : '✓ Guardar Producto' }}
+      </ion-button>
+      
+      <ion-button
+        expand="block"
+        fill="outline"
+        color="medium"
+        (click)="cerrarModal()">
+        <ion-icon slot="start" name="close-outline"></ion-icon>
+        Cancelar
+      </ion-button>
+    </div>
+
+    <!-- Nota de campos obligatorios -->
+    <p class="nota-obligatoria">* Campos obligatorios</p>
+  </form>
+</ion-content>

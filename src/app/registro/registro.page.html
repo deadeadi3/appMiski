@@ -1,0 +1,62 @@
+<ion-header collapse="condense">
+  <ion-toolbar>
+    <ion-title></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="contenedor-imagen">
+    <img src="assets/icon/miskylogoo1.png" />
+  </div>
+
+  <ion-list>
+    <ion-item>
+      <ion-input [(ngModel)]="nombre" labelPlacement="floating">
+        <div slot="label">Nombre:</div>
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input [(ngModel)]="apellidos" labelPlacement="floating">
+        <div slot="label">Apellidos:</div>
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input [(ngModel)]="usuario" labelPlacement="floating">
+        <div slot="label">Usuario:</div>
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input [(ngModel)]="dni" labelPlacement="floating">
+        <div slot="label">DNI:</div>
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input [(ngModel)]="email" labelPlacement="floating" type="email">
+        <div slot="label">Email:</div>
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input [(ngModel)]="contrasena" labelPlacement="floating" type="password">
+        <div slot="label">Contraseña:</div>
+      </ion-input>
+    </ion-item>
+  </ion-list>
+
+<ion-button expand="block" type="submit" class="ion-margin-top login-button" (click)="onRegistro()">
+  Registrarse
+</ion-button>
+
+  <div>
+    <p class="Ya-cuenta-texto">
+      ¿Ya tienes cuenta?
+      <span class="link-crear-cuenta" (click)="irACrearCuenta()">
+        Inicia sesión aquí
+      </span>
+    </p>
+  </div>
+</ion-content>

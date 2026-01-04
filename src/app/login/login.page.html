@@ -1,0 +1,44 @@
+<ion-content scrollY="false" class="poppins-content ion-padding">
+  <div class="contenedor-imagen">   
+    <img src="assets/icon/miskylogoo1.png" />
+  </div>
+
+  <div class="contenedor-imagen2">
+    <img src="assets/icon/14.png" class="contenedor-imagen2"/>
+  </div>
+    
+  <form (ngSubmit)="onLogin()">
+    <ion-item>
+      <ion-label position="stacked">Email:</ion-label>
+      <ion-input 
+        type="email" 
+        [(ngModel)]="email" 
+        name="email"
+        placeholder="Ingresa tu email">
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Contraseña:</ion-label>
+      <ion-input 
+        type="password" 
+        [(ngModel)]="contrasena" 
+        name="contrasena"
+        placeholder="Ingresa tu contraseña">
+      </ion-input>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" class="ion-margin-top login-button" size="default">
+      Iniciar Sesión
+    </ion-button>
+  </form>
+
+  <div class="crear-cuenta-container">
+    <p class="crear-cuenta-texto">
+      ¿No tienes cuenta? 
+      <span class="link-crear-cuenta" (click)="irACrearCuenta()">
+        Crea una cuenta aquí
+      </span>
+    </p>
+  </div>
+</ion-content>

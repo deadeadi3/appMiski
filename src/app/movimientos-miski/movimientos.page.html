@@ -1,0 +1,77 @@
+<app-header-miski></app-header-miski>
+
+<ion-content class="ion-padding">
+
+  <div class="titulo-seccion">
+    <h2>Bitácora</h2>
+    <p>Historial de movimientos</p>
+  </div>
+
+  <div class="filtros-container">
+    <ion-searchbar 
+      [(ngModel)]="textoBuscar" 
+      (ionInput)="aplicarFiltros()" 
+      placeholder="Buscar movimiento..."
+      mode="ios"
+      class="custom-searchbar">
+    </ion-searchbar>
+
+    <div class="chips-scroll">
+      <ion-chip [color]="filtroTipo === 'Todos' ? 'primary' : 'medium'" [outline]="filtroTipo !== 'Todos'" (click)="cambiarFiltro('Todos')">
+        <ion-label>Todos</ion-label>
+      </ion-chip>
+      
+      <ion-chip [color]="filtroTipo === 'Creación' ? 'success' : 'medium'" [outline]="filtroTipo !== 'Creación'" (click)="cambiarFiltro('Creación')">
+        <ion-icon name="add-circle"></ion-icon>
+        <ion-label>Añadidos</ion-label>
+      </ion-chip>
+
+      <ion-chip [color]="filtroTipo === 'Edición' ? 'warning' : 'medium'" [outline]="filtroTipo !== 'Edición'" (click)="cambiarFiltro('Edición')">
+        <ion-icon name="create"></ion-icon>
+        <ion-label>Editados</ion-label>
+      </ion-chip>
+
+      <ion-chip [color]="filtroTipo === 'Eliminación' ? 'danger' : 'medium'" [outline]="filtroTipo !== 'Eliminación'" (click)="cambiarFiltro('Eliminación')">
+        <ion-icon name="trash"></ion-icon>
+        <ion-label>Eliminados</ion-label>
+      </ion-chip>
+    </div>
+  </div>
+
+  <ion-list>
+    <ion-item *ngFor="let item of listaVisual" lines="none" 
+              class="movimiento-card"
+              button="true" 
+              (click)="verDetalle(item)"
+              [class.tipo-creacion]="item.accion === 'Creación'"
+              [class.tipo-edicion]="item.accion === 'Edición'"
+              [class.tipo-eliminacion]="item.accion === 'Eliminación'">
+      
+      <div slot="start" class="media-wrapper">
+        <img *ngIf="item.image" [src]="item.image" alt="img" class="producto-imagen">
+        <div *ngIf="!item.image" class="icon-wrapper fallback-icon">
+          <ion-icon [name]="item.accion === 'Eliminación' ? 'trash-outline' : (item.accion === 'Edición' ? 'create-outline' : 'cube-outline')"></ion-icon>
+        </div>
+      </div>
+
+      <ion-label>
+        <div class="top-row">
+          <h3>{{ item.producto }}</h3>
+          <span class="fecha">{{ item.fecha.toDate() | date:'d MMM' }}</span>
+        </div>
+        
+        <div class="bottom-row">
+          <p class="accion-badge">{{ item.accion }}</p>
+          <span class="hora-small">{{ item.fecha.toDate() | date:'h:mm a' }}</span>
+        </div>
+      </ion-label>
+
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="listaVisual.length === 0" class="empty-state">
+    <img src="assets/icon/misky.png" alt="Sin datos" style="opacity: 0.5; width: 80px;">
+    <p>No se encontraron resultados.</p>
+  </div>
+
+</ion-content>

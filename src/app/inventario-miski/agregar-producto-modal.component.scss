@@ -1,0 +1,263 @@
+// Variables de color
+$primary-color: #6366f1;
+$success-color: #10b981;
+$danger-color: #ef4444;
+$warning-color: #f59e0b;
+$gray-light: #f3f4f6;
+$gray-medium: #9ca3af;
+$border-radius: 12px;
+$transition: all 0.3s ease;
+
+ion-content {
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 100px;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+}
+
+form {
+  padding: 16px;
+  padding-bottom: 24px;
+}
+
+// Sección de imagen previa
+.imagen-preview-section {
+  text-align: center;
+  margin-bottom: 32px;
+  background: white;
+  padding: 20px;
+  border-radius: $border-radius;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  .imagen-container {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 12px;
+    border-radius: $border-radius;
+    overflow: hidden;
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #e5e7eb;
+    transition: $transition;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: $transition;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .imagen-hint {
+    color: $gray-medium;
+    font-size: 12px;
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+// Items de formulario
+ion-item {
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --min-height: 56px;
+  --background: white;
+  border-radius: $border-radius;
+  margin-bottom: 12px !important;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: $transition;
+
+  &:focus-within {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
+  ion-label {
+    color: #374151;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    ion-icon {
+      color: $primary-color;
+      font-size: 18px;
+    }
+  }
+
+  ion-input,
+  ion-textarea,
+  ion-select {
+    --padding-start: 0;
+    --padding-end: 0;
+    font-size: 14px;
+    color: #1f2937;
+
+    &::placeholder {
+      color: #d1d5db;
+    }
+  }
+
+  ion-input,
+  ion-textarea {
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+  }
+
+  ion-note {
+    font-size: 11px;
+    margin-top: 4px;
+    padding: 4px 0;
+    display: block;
+  }
+}
+
+// Estado inválido del input
+.input-invalid {
+  --border-color: $danger-color !important;
+  
+  &:focus {
+    --border-color: $danger-color !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+  }
+}
+
+// Select personalizado
+ion-select {
+  --padding-start: 0;
+  --padding-end: 0;
+  color: #1f2937;
+}
+
+// Botones de acción - MEJORADOS
+.botones-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 40px;
+  margin-bottom: 16px;
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(to top, white, rgba(255, 255, 255, 0.95));
+  padding: 16px 0 8px 0;
+  z-index: 10;
+
+  ion-button {
+    --border-radius: $border-radius;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    min-height: 48px;
+    font-size: 16px;
+    transition: $transition;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    &[fill="solid"] {
+      --background: linear-gradient(135deg, $primary-color 0%, #4f46e5 100%);
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.5);
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(0px);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    &[fill="outline"] {
+      --border-color: #d1d5db;
+      --border-width: 2px;
+      color: #6b7280;
+      transition: $transition;
+
+      &:hover:not(:disabled) {
+        --border-color: $primary-color;
+        color: $primary-color;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(0px);
+      }
+    }
+
+    ion-icon {
+      margin-right: 8px;
+      font-size: 20px;
+    }
+  }
+}
+
+// Nota de campos obligatorios
+.nota-obligatoria {
+  text-align: center;
+  color: $gray-medium;
+  font-size: 12px;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+// Responsive
+@media (max-width: 480px) {
+  form {
+    padding: 12px;
+    padding-bottom: 24px;
+  }
+
+  ion-item {
+    margin-bottom: 8px !important;
+  }
+
+  .imagen-preview-section {
+    margin-bottom: 20px;
+    padding: 16px;
+  }
+
+  .botones-container {
+    gap: 8px;
+    margin-top: 32px;
+
+    ion-button {
+      font-size: 14px;
+      min-height: 44px;
+    }
+  }
+}
+
+// Animación de entrada
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+form {
+  animation: slideUp 0.3s ease-out;
+}
+

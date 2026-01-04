@@ -1,0 +1,427 @@
+<app-header-miski></app-header-miski>
+
+<ion-content [fullscreen]="false" class="reports-content" scrollEvents="true">
+
+  <!-- Pull to Refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      pullingText="Desliza para actualizar"
+      refreshingSpinner="crescent"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Filtro de Tiempo -->
+  <ion-card class="filter-card">
+    <ion-card-content>
+      <div class="filter-header">
+        <ion-segment [value]="filtroActual" (ionChange)="cambiarFiltro($event)" mode="ios">
+          <ion-segment-button value="dia">
+            <ion-label>Hoy</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="semana">
+            <ion-label>Semana</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="mes">
+            <ion-label>Mes</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+        
+        <ion-button fill="clear" (click)="abrirSelectorFechas()" class="filter-button">
+          <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+        </ion-button>
+      </div>
+      
+      <!-- Mostrar rango de fechas personalizado si está activo -->
+      <div *ngIf="usandoFechasPersonalizadas" class="custom-date-range">
+        <ion-chip class="date-chip">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <ion-label>{{ rangoFechasTexto }}</ion-label>
+          <ion-icon name="close-circle" (click)="limpiarFiltroFechas()"></ion-icon>
+        </ion-chip>
+      </div>
+      
+      <!-- Debug info -->
+      <div class="debug-info">
+        <span>{{ kpiData.facturas }} ventas cargadas</span>
+        <ion-chip 
+          [class]="incluirCanceladas ? 'chip-active' : 'chip-inactive'" 
+          (click)="toggleCanceladas()"
+          class="toggle-chip">
+          <ion-icon [name]="incluirCanceladas ? 'eye-outline' : 'eye-off-outline'"></ion-icon>
+          <ion-label>{{ incluirCanceladas ? 'Incluye canceladas' : 'Sin canceladas' }}</ion-label>
+        </ion-chip>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Skeleton Loading Mejorado con Diseño Soft UI -->
+  <div *ngIf="isLoading" class="loading-container">
+    <!-- Skeleton KPIs -->
+    <h2 class="section-title">
+      <ion-skeleton-text [animated]="true" style="width: 80px; height: 24px; border-radius: 4px"></ion-skeleton-text>
+    </h2>
+    <ion-grid class="kpi-grid">
+      <ion-row>
+        <ion-col size="6" *ngFor="let i of [1,2,3,4]">
+          <ion-card class="kpi-mini-card skeleton-card">
+            <ion-card-header>
+              <div class="card-header-content">
+                <ion-skeleton-text [animated]="true" style="width: 24px; height: 24px; border-radius: 50%"></ion-skeleton-text>
+                <ion-skeleton-text [animated]="true" style="width: 70%; height: 12px; border-radius: 4px"></ion-skeleton-text>
+              </div>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-skeleton-text [animated]="true" style="width: 85%; height: 32px; margin-bottom: 12px; border-radius: 4px"></ion-skeleton-text>
+              <ion-skeleton-text [animated]="true" style="width: 60%; height: 16px; border-radius: 4px"></ion-skeleton-text>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    
+    <!-- Skeleton Detalles -->
+    <h2 class="section-title" style="margin-top: 32px;">
+      <ion-skeleton-text [animated]="true" style="width: 100px; height: 24px; border-radius: 4px"></ion-skeleton-text>
+    </h2>
+    
+    <!-- Skeleton Gráfico -->
+    <ion-card class="detail-card skeleton-card">
+      <ion-card-header>
+        <div class="detail-header">
+          <ion-skeleton-text [animated]="true" style="width: 60%; height: 20px; border-radius: 4px"></ion-skeleton-text>
+          <ion-skeleton-text [animated]="true" style="width: 80px; height: 32px; border-radius: 16px"></ion-skeleton-text>
+        </div>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="chart-container skeleton-chart">
+          <ion-skeleton-text [animated]="true" style="width: 100%; height: 100%; border-radius: 12px"></ion-skeleton-text>
+        </div>
+      </ion-card-content>
+    </ion-card>
+    
+    <!-- Skeleton Top Productos -->
+    <ion-card class="detail-card skeleton-card">
+      <ion-card-header>
+        <div class="detail-header">
+          <ion-skeleton-text [animated]="true" style="width: 50%; height: 20px; border-radius: 4px"></ion-skeleton-text>
+          <ion-skeleton-text [animated]="true" style="width: 40px; height: 28px; border-radius: 14px"></ion-skeleton-text>
+        </div>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="none" class="modern-list">
+          <ion-item *ngFor="let i of [1,2,3]" class="skeleton-item">
+            <ion-skeleton-text slot="start" [animated]="true" style="width: 36px; height: 36px; border-radius: 12px"></ion-skeleton-text>
+            <ion-label>
+              <ion-skeleton-text [animated]="true" style="width: 70%; height: 16px; margin-bottom: 8px; border-radius: 4px"></ion-skeleton-text>
+              <ion-skeleton-text [animated]="true" style="width: 50%; height: 14px; border-radius: 4px"></ion-skeleton-text>
+            </ion-label>
+            <ion-skeleton-text slot="end" [animated]="true" style="width: 60px; height: 20px; border-radius: 4px"></ion-skeleton-text>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+    
+    <!-- Skeleton Resumen -->
+    <ion-card class="detail-card skeleton-card">
+      <ion-card-header>
+        <ion-skeleton-text [animated]="true" style="width: 40%; height: 20px; border-radius: 4px"></ion-skeleton-text>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid class="summary-grid">
+          <ion-row>
+            <ion-col size="6" sizeMd="3" *ngFor="let i of [1,2,3,4]">
+              <div class="summary-item">
+                <ion-skeleton-text [animated]="true" style="width: 80%; height: 12px; margin-bottom: 12px; border-radius: 4px"></ion-skeleton-text>
+                <ion-skeleton-text [animated]="true" style="width: 90%; height: 20px; border-radius: 4px"></ion-skeleton-text>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Sección KPIs: 2 tarjetas por fila -->
+  <div *ngIf="!isLoading">
+    <h2 class="section-title">KPIs</h2>
+    <ion-grid class="kpi-grid">
+      <ion-row>
+        <!-- Ventas Totales -->
+        <ion-col size="6">
+          <ion-card class="kpi-mini-card">
+            <ion-card-header>
+              <div class="card-header-content">
+                <ion-icon name="cash-outline" class="kpi-icon"></ion-icon>
+                <ion-card-title>VENTAS TOTALES</ion-card-title>
+              </div>
+            </ion-card-header>
+            <ion-card-content>
+              <div class="kpi-value">S/. {{ kpiData.ventas | number:'1.2-2' }}</div>
+              <div class="kpi-footer">
+                <ion-badge [class]="getTrendColor(comparacion.ventas)">
+                  <ion-icon [name]="getTrendIcon(comparacion.ventas)"></ion-icon>
+                  {{ comparacion.ventas | number:'1.1-1' }}%
+                </ion-badge>
+                <span class="kpi-label">{{ kpiData.facturas }} transacciones</span>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <!-- Utilidad Neta -->
+        <ion-col size="6">
+          <ion-card class="kpi-mini-card">
+            <ion-card-header>
+              <div class="card-header-content">
+                <ion-icon name="trending-up-outline" class="kpi-icon"></ion-icon>
+                <ion-card-title>UTILIDAD NETA</ion-card-title>
+              </div>
+            </ion-card-header>
+            <ion-card-content>
+              <div class="kpi-value">S/. {{ kpiData.utilidad | number:'1.2-2' }}</div>
+              <div class="kpi-footer">
+                <ion-badge [class]="getTrendColor(comparacion.utilidad)">
+                  <ion-icon [name]="getTrendIcon(comparacion.utilidad)"></ion-icon>
+                  {{ comparacion.utilidad | number:'1.1-1' }}%
+                </ion-badge>
+                <span class="kpi-label">Ganancia Real</span>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <!-- Margen Promedio -->
+        <ion-col size="6">
+          <ion-card class="kpi-mini-card">
+            <ion-card-header>
+              <div class="card-header-content">
+                <ion-icon name="stats-chart-outline" class="kpi-icon"></ion-icon>
+                <ion-card-title>MARGEN PROMEDIO</ion-card-title>
+              </div>
+            </ion-card-header>
+            <ion-card-content>
+              <div class="kpi-value">{{ kpiData.margen | number:'1.1-1' }}%</div>
+              <div class="kpi-footer">
+                <ion-progress-bar 
+                  [value]="kpiData.margen / 100" 
+                  [class]="kpiData.margen > 30 ? 'progress-success' : kpiData.margen > 15 ? 'progress-warning' : 'progress-danger'">
+                </ion-progress-bar>
+                <span class="kpi-label">Rentabilidad</span>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <!-- Items Vendidos -->
+        <ion-col size="6">
+          <ion-card class="kpi-mini-card">
+            <ion-card-header>
+              <div class="card-header-content">
+                <ion-icon name="cart-outline" class="kpi-icon"></ion-icon>
+                <ion-card-title>ITEMS VENDIDOS</ion-card-title>
+              </div>
+            </ion-card-header>
+            <ion-card-content>
+              <div class="kpi-value">{{ kpiData.items }}</div>
+              <div class="kpi-footer">
+                <ion-chip class="info-chip">
+                  <ion-label>{{ kpiData.items / kpiData.facturas | number:'1.1-1' }} por venta</ion-label>
+                </ion-chip>
+                <span class="kpi-label">Unidades</span>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- Sección Detalles: Tarjetas de ancho completo -->
+  <div *ngIf="!isLoading">
+    <h2 class="section-title">Detalles</h2>
+
+    <!-- Gráfico - Solo se muestra si hay datos -->
+    <ion-card class="detail-card" *ngIf="tieneDatosGrafico">
+      <ion-card-header>
+        <div class="detail-header">
+          <div class="header-title">
+            <ion-icon name="trending-up-outline"></ion-icon>
+            <ion-card-title>Tendencia de Ingresos</ion-card-title>
+          </div>
+          <ion-button fill="clear" size="small" (click)="randomize()" class="refresh-button">
+            <ion-icon slot="start" name="refresh-outline"></ion-icon>
+            Actualizar
+          </ion-button>
+        </div>
+      </ion-card-header>
+      <ion-card-content>
+        <!-- Contenedor con altura fija para que el canvas se renderice correctamente -->
+        <div class="chart-container">
+          <canvas #myChartCanvas></canvas>
+        </div>
+      </ion-card-content>
+    </ion-card>
+    
+    <!-- Mensaje si no hay datos para el gráfico -->
+    <ion-card class="detail-card" *ngIf="!isLoading && !tieneDatosGrafico && datosCargados">
+      <ion-card-content>
+        <div class="empty-chart-message">
+          <ion-icon name="bar-chart-outline"></ion-icon>
+          <p>No hay datos suficientes para mostrar la tendencia</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Top Productos -->
+    <ion-card class="detail-card">
+      <ion-card-header>
+        <div class="detail-header">
+          <div class="header-title">
+            <ion-icon name="trophy-outline"></ion-icon>
+            <ion-card-title>Top Productos</ion-card-title>
+          </div>
+          <ion-chip class="count-chip">
+            <ion-label>{{ topProductos.length }}</ion-label>
+          </ion-chip>
+        </div>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="none" class="modern-list">
+          <ion-item *ngFor="let prod of topProductos; let i = index" class="product-item">
+            <div slot="start" [class]="'rank-badge rank-' + (i + 1)">
+              <span>{{ i + 1 }}</span>
+            </div>
+            <ion-label>
+              <h2 class="product-name">{{ prod.nombre }}</h2>
+              <p class="product-details">
+                <ion-icon name="cart-outline"></ion-icon>
+                {{ prod.cantidad }} unidades
+              </p>
+            </ion-label>
+            <div slot="end" class="product-total">
+              <div class="price-value">S/. {{ prod.total | number:'1.2-2' }}</div>
+              <ion-badge class="percentage-badge">
+                {{ (prod.total / kpiData.ventas * 100) | number:'1.0-0' }}%
+              </ion-badge>
+            </div>
+          </ion-item>
+
+          <ion-item *ngIf="topProductos.length === 0" class="empty-state">
+            <ion-label class="ion-text-center">
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              <p>No hay ventas en este periodo</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Ventas Recientes -->
+    <ion-card class="detail-card">
+      <ion-card-header>
+        <div class="detail-header">
+          <div class="header-title">
+            <ion-icon name="time-outline"></ion-icon>
+            <ion-card-title>Ventas Recientes</ion-card-title>
+          </div>
+          <ion-chip class="count-chip">
+            <ion-label>{{ ventasRecientes.length }}</ion-label>
+          </ion-chip>
+        </div>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="none" class="modern-list">
+          <ion-item *ngFor="let venta of ventasRecientes" class="sale-item">
+            <ion-icon slot="start" name="checkmark-circle" class="success-icon"></ion-icon>
+            <ion-label>
+              <h2 class="sale-product">{{ venta.producto }}</h2>
+              <p class="sale-details">
+                <ion-icon name="person-outline"></ion-icon>
+                {{ venta.cliente }} • 
+                <ion-icon name="calendar-outline"></ion-icon>
+                {{ venta.fecha }}
+              </p>
+            </ion-label>
+            <div slot="end" class="sale-total">
+              <div class="price-value">S/. {{ venta.total | number:'1.2-2' }}</div>
+              <div class="sale-quantity">{{ venta.cantidad }} unid.</div>
+            </div>
+          </ion-item>
+
+          <ion-item *ngIf="ventasRecientes.length === 0" class="empty-state">
+            <ion-label class="ion-text-center">
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              <p>No hay ventas recientes</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Resumen Final -->
+    <ion-card class="detail-card summary-card" *ngIf="!isLoading && datosCargados">
+      <ion-card-header>
+        <div class="detail-header">
+          <div class="header-title">
+            <ion-icon name="document-text-outline"></ion-icon>
+            <ion-card-title>Resumen del Periodo</ion-card-title>
+          </div>
+        </div>
+      </ion-card-header>
+      
+      <!-- Grid sin ion-card-content para evitar restricciones -->
+      <div class="summary-wrapper">
+        <!-- Total Ventas -->
+        <div class="summary-item">
+          <div class="summary-label">Total Ventas</div>
+          <div class="summary-value">S/. {{ kpiData.ventas | number:'1.2-2' }}</div>
+        </div>
+        
+        <!-- Utilidad -->
+        <div class="summary-item">
+          <div class="summary-label">Utilidad</div>
+          <div class="summary-value">S/. {{ kpiData.utilidad | number:'1.2-2' }}</div>
+        </div>
+        
+        <!-- Transacciones -->
+        <div class="summary-item">
+          <div class="summary-label">Transacciones</div>
+          <div class="summary-value">{{ kpiData.facturas }}</div>
+        </div>
+        
+        <!-- Crecimiento -->
+        <div class="summary-item">
+          <div class="summary-label">Crecimiento</div>
+          <div class="summary-value" 
+               [style.color]="kpiData.crecimiento >= 0 ? 'var(--ion-color-success)' : 'var(--ion-color-danger)'">
+            {{ kpiData.crecimiento >= 0 ? '+' : '' }}{{ kpiData.crecimiento | number:'1.1-1' }}%
+          </div>
+        </div>
+      </div>
+    </ion-card>
+  </div>
+
+  <!-- Espaciado final para scroll -->
+  <div class="content-spacer" style="padding-bottom: 150px; height: auto;"></div>
+
+  <!-- FAB con opciones -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button class="fab-button">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="exportarReporte()" class="fab-action">
+        <ion-icon name="document-text-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="compartirReporte()" class="fab-action">
+        <ion-icon name="share-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="randomize()" class="fab-action">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+</ion-content>

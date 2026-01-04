@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Editar Datos Personales</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form>
+    <ion-item>
+      <ion-label position="stacked">Nombre *</ion-label>
+      <ion-input [(ngModel)]="editedData.nombre" name="nombre" placeholder="Ingresa tu nombre"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Apellidos</ion-label>
+      <ion-input [(ngModel)]="editedData.apellidos" name="apellidos" placeholder="Ingresa tus apellidos"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">DNI</ion-label>
+      <ion-input [(ngModel)]="editedData.dni" name="dni" placeholder="Ingresa tu DNI"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Usuario</ion-label>
+      <ion-input [(ngModel)]="editedData.usuario" name="usuario" placeholder="Ingresa tu usuario"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Email *</ion-label>
+      <ion-input [(ngModel)]="editedData.email" name="email" type="email" placeholder="Ingresa tu email"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Teléfono</ion-label>
+      <ion-input [(ngModel)]="editedData.telefono" name="telefono" type="tel" placeholder="Ingresa tu teléfono"></ion-input>
+    </ion-item>
+
+    <ion-button expand="full" (click)="guardarCambios()" color="primary">
+      Guardar Cambios
+    </ion-button>
+  </form>
+</ion-content>

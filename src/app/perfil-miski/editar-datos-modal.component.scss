@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+// Forzamos la fuente en todo el modal
+:host { 
+  font-family: 'Poppins', sans-serif; 
+}
+
+ion-header {
+  ion-toolbar {
+    --background: #fff;
+    ion-title {
+      font-weight: 600;
+      font-size: 18px;
+      color: #000;
+    }
+  }
+}
+
+ion-content {
+  --background: #fff;
+}
+
+// Estilo de los campos (Inputs) para que se vean modernos
+ion-item {
+  --background: #f8f9fa;
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  margin-bottom: 16px;
+  box-shadow: none;
+  border: 1px solid #eee;
+
+  ion-label {
+    font-weight: 500;
+    color: #666;
+  }
+
+  ion-input {
+    font-weight: 600;
+    color: #000;
+  }
+}
+
+// Botones del modal
+ion-button {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  margin-top: 10px;
+  --border-radius: 12px;
+}

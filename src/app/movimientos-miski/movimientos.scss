@@ -1,0 +1,225 @@
+// // --- COLORES ---
+$color-creacion: #2dd36f; // Verde
+$color-edicion: #ffc409;  // Amarillo
+$color-eliminacion: #eb445a; // Rojo
+
+ion-content {
+  --background: #f4f6f9; // Fondo gris suave
+}
+
+// --- HEADER NUEVO (Estilo Misky) ---
+ion-toolbar {
+  --background: #ffffff; // Fondo BLANCO
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+// Estilo del Logo
+.mi-imagen-personalizada {
+  height: 60px; // Ajustado para que quepa bien con el botón atrás
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+// Estilo del Avatar
+ion-avatar {
+  height: 45px;
+  width: 45px;
+  margin-right: 15px;
+  border: 2px solid #f0f0f0; // Un borde suave opcional
+}
+
+// --- TÍTULO SECCIÓN ---
+.titulo-seccion {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  padding-left: 5px;
+
+  h2 {
+    font-weight: 800;
+    color: #333;
+    margin: 0;
+    font-size: 1.8rem;
+  }
+  p {
+    margin: 0;
+    color: #888;
+    font-size: 0.9rem;
+  }
+}
+
+// --- TARJETAS (Mantenemos tu diseño de esquinas rectas) ---
+ion-list {
+  background: transparent;
+  padding-top: 0;
+}
+
+.movimiento-card {
+  --background: #ffffff;
+  --padding-start: 15px;
+  --padding-end: 15px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  
+  margin-bottom: 12px;
+  border-radius: 0; // Esquinas RECTAS como pediste
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  
+  border-left: 5px solid #ccc; 
+}
+
+// --- ESTILOS DINÁMICOS ---
+.tipo-creacion {
+  border-left-color: $color-creacion;
+  .icon-wrapper { background: rgba($color-creacion, 0.15); color: darken($color-creacion, 10%); }
+  .accion-badge { color: darken($color-creacion, 10%); background: rgba($color-creacion, 0.1); }
+}
+
+.tipo-edicion {
+  border-left-color: $color-edicion;
+  .icon-wrapper { background: rgba($color-edicion, 0.15); color: darken($color-edicion, 20%); }
+  .accion-badge { color: darken($color-edicion, 20%); background: rgba($color-edicion, 0.15); }
+}
+
+.tipo-eliminacion {
+  border-left-color: $color-eliminacion;
+  .icon-wrapper { background: rgba($color-eliminacion, 0.15); color: $color-eliminacion; }
+  .accion-badge { color: $color-eliminacion; background: rgba($color-eliminacion, 0.1); }
+}
+
+
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+
+  h3 {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #222; margin: 0;
+  }
+  .fecha { font-size: 0.75rem; color: #999; }
+}
+
+.accion-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+
+.media-wrapper {
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.producto-imagen {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; 
+  object-fit: cover;  
+  border: 2px solid #f0f0f0; 
+}
+
+.icon-wrapper.fallback-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  ion-icon { font-size: 24px; }
+}
+
+.empty-state {
+  text-align: center; margin-top: 50px;
+  p { color: #aaa; margin-top: 10px; }
+}
+
+
+.avatar-header {
+  margin-left: 10px;
+  margin-right: 10px;
+  height: 40px; width: 40px;
+}
+
+.filtros-container {
+  margin-bottom: 15px;
+}
+
+.custom-searchbar {
+  padding-left: 0;
+  padding-right: 0;
+  --background: #ffffff;
+  --box-shadow: none;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  --border-radius: 10px;
+}
+
+.chips-scroll {
+  display: flex;
+  overflow-x: auto; 
+  padding-bottom: 5px;
+  gap: 5px;
+  
+  &::-webkit-scrollbar { display: none; }
+}
+
+ion-chip {
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.hora-small {
+  font-size: 0.7rem;
+  color: #aaa;
+  margin-left: auto; // Empuja la hora a la derecha
+}
+
+.bottom-row {
+  display: flex;
+  align-items: center;
+}
+
+.filtros-container {
+  margin-bottom: 15px;
+}
+
+.custom-searchbar {
+  padding-left: 0;
+  padding-right: 0;
+  --background: #ffffff;
+  --box-shadow: none;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.chips-scroll {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 5px;
+  gap: 5px;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.hora-small {
+  font-size: 0.7rem;
+  color: #aaa;
+  margin-left: auto; 
+}
+
+.bottom-row {
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,4 @@
+<key>NSCameraUsageDescription</key>
+<string>Para tomar fotos de perfil</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>Para seleccionar fotos de la galería</string>

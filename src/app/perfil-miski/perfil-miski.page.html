@@ -1,0 +1,79 @@
+<app-header-miski></app-header-miski>
+
+<ion-content class="ion-padding">
+  <h1 class="page-title">Perfil</h1>  <div class="profile-section" (click)="verPerfil()">
+    <div class="avatar-container">
+      <ion-avatar class="profile-avatar">
+        <img [src]="currentImage" (error)="handleImgError($event)" alt="Foto de perfil">
+      </ion-avatar>
+      <div class="avatar-edit-badge">
+        <ion-icon name="camera"></ion-icon>
+      </div>
+    </div>
+
+    <div class="profile-info">
+      <h2 class="profile-name">{{ userData.nombre }} {{ userData.apellidos }}</h2>
+      <p class="profile-usuario">Usuario: {{ userData.usuario }}</p>
+      <div class="profile-status">
+        <div class="status-dot"></div>
+        <span>{{ userData.activo ? 'Activo' : 'Inactivo' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-container">
+    <div class="stat-card">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{ diasActivos }}</span>
+        <span class="stat-label">Días activo</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <ion-icon name="notifications-outline"></ion-icon>
+      <div class="stat-info">
+        <span class="stat-value">3</span>
+        <span class="stat-label">Notificaciones</span>
+      </div>
+    </div>
+  </div>
+
+  <ion-list lines="none" class="options-list">
+    
+    <ion-item button detail="false" class="option-item" (click)="editarDatos()">
+      <div class="option-icon-wrapper blue-bg">
+        <ion-icon name="person-outline" class="option-icon"></ion-icon>
+      </div>
+      <ion-label class="option-label">Editar datos personales</ion-label>
+      <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+    </ion-item>
+
+    <ion-item button detail="false" class="option-item" (click)="cambiarPassword()">
+      <div class="option-icon-wrapper purple-bg">
+        <ion-icon name="lock-closed-outline" class="option-icon"></ion-icon>
+      </div>
+      <ion-label class="option-label">Cambiar contraseña</ion-label>
+      <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+    </ion-item>
+
+    <ion-item button detail="false" class="option-item">
+      <div class="option-icon-wrapper orange-bg">
+        <ion-icon name="notifications-outline" class="option-icon"></ion-icon>
+      </div>
+      <ion-label class="option-label">Notificaciones</ion-label>
+      <ion-toggle [(ngModel)]="notifEnabled" slot="end" class="notif-toggle" (ionChange)="configurarNotificaciones()"></ion-toggle>
+    </ion-item>
+
+    <ion-item button detail="false" class="option-item logout-item" (click)="logout()">
+      <div class="option-icon-wrapper logout-icon-wrapper">
+        <ion-icon name="log-out-outline" class="option-icon"></ion-icon>
+      </div>
+      <ion-label class="option-label logout-label">Cerrar Sesión</ion-label>
+      <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <div class="app-version">
+    <p>Versión Grupo 8</p>
+  </div>
+</ion-content>

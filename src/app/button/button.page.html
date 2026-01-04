@@ -1,0 +1,38 @@
+<app-header-miski></app-header-miski>
+
+<ion-content [fullscreen]="true" (click)="hideRecentSearches()" class="ion-padding-top">
+  
+  <!-- Grid de botones organizados -->
+  <div class="botones-grid">
+    <!-- Fila 1 -->
+    <div class="boton-item" (click)="iraInventario()">
+      <div class="icono-boton">
+        <ion-icon name="cube-outline"></ion-icon>
+      </div>
+      <p class="boton-label">Inventario</p>
+    </div>
+
+    <div class="boton-item" (click)="aPerfil()">
+      <div class="icono-boton">
+        <ion-icon name="person-outline"></ion-icon>
+      </div>
+      <p class="boton-label">Perfil</p>
+    </div>
+
+    <!-- Fila 2 -->
+    <div class="boton-item" (click)="iraReporte()">
+      <div class="icono-boton">
+        <ion-icon name="bar-chart-outline"></ion-icon>
+      </div>
+      <p class="boton-label">Reportes</p>
+    </div>
+
+    <div class="boton-item" (click)="irMovimientos()">
+      <div class="icono-boton">
+        <ion-icon name="git-compare-outline"></ion-icon>
+      </div>
+      <p class="boton-label">Movimientos</p>
+    </div>
+  </div>
+
+
