@@ -1,5 +1,5 @@
 # Aplicacion de Invetario Mistik
-
+![Pantalla principal de la app](screenshots/inicio.png)
 Aplicación desarrollada en **Ionic** con **Angular**. Este proyecto es de uso libre; puedes modificarlo y adaptarlo según tus necesidades.
 
 > **¡Atención!** Es obligatorio tener **Ionic CLI** instalado en tu computadora para que la aplicación funcione correctamente.
